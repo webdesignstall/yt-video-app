@@ -1,0 +1,15 @@
+{
+  "source": {
+    "include": ["cypress/e2e"],
+    "includePattern": ".+\\.cy\\.ts$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+  "opts": {
+    "destination": "./docs",
+    "recurse": true
+  },
+  "plugins": [
+    "plugins/markdown",
+    "node_modules/tsd-jsdoc"
+  ]
+}
