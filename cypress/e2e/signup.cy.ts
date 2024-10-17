@@ -1,4 +1,13 @@
+/**
+ * @module SignUpFormTests
+ * @description Test suite for the Sign Up form.
+ */
 describe("Sign Up Form", () => {
+  /**
+   * @function beforeEach
+   * @description Runs before each test to intercept the signup API call and visit the signup page.
+   * Mocks the API response for a successful signup.
+   */
   beforeEach(() => {
     // Intercept the API call and mock the response
     cy.intercept("POST", "/api/signup", {
@@ -10,6 +19,11 @@ describe("Sign Up Form", () => {
     cy.visit("/signup");
   });
 
+  /**
+   * @function shouldFillOutSignupFormAndSubmit
+   * @description Test case to fill out the signup form and submit it.
+   * Ensures that after a successful signup, the success message is displayed.
+   */
   it("should fill out the signup form and submit", () => {
     // Fill out the form
     cy.get('input[id="username"]').type("johndoe");
@@ -26,6 +40,11 @@ describe("Sign Up Form", () => {
     cy.contains("Account created successfully!").should("exist");
   });
 
+  /**
+   * @function shouldShowValidationErrorsOnEmptyFields
+   * @description Test case for showing validation errors when the signup form is submitted with empty fields.
+   * Verifies that appropriate error messages are displayed for required fields.
+   */
   it("should show validation errors on empty fields", () => {
     // Click the submit button without filling out the form
     cy.get("button[type='submit']").click();
@@ -41,8 +60,11 @@ describe("Sign Up Form", () => {
     cy.contains("Password is required").should("exist");
   });
 
-
-
+  /**
+   * @function shouldShowUsernameAndEmailAlreadyExistsErrors
+   * @description Test case to simulate a signup error when the username or email already exists.
+   * Mocks the API response to return a 400 error and verifies that the corresponding error messages are shown.
+   */
   it("should show username and email already exists errors", () => {
     // Intercept the API call for this test with error response
     cy.intercept("POST", "/api/signup", {
@@ -69,7 +91,11 @@ describe("Sign Up Form", () => {
     cy.contains("Email already taken").should("exist");
   });
 
-  // New test case for invalid email
+  /**
+   * @function shouldShowValidationErrorForInvalidEmail
+   * @description Test case to show validation error for an invalid email format.
+   * Ensures that submitting the form with an invalid email displays the appropriate error message.
+   */
   it("should show validation error for invalid email", () => {
     // Fill out the form with an invalid email
     cy.get('input[id="username"]').type("johndoe");
@@ -83,7 +109,11 @@ describe("Sign Up Form", () => {
     cy.contains("Invalid email format").should("exist");
   });
 
-  // New test case for short password
+  /**
+   * @function shouldShowValidationErrorForShortPassword
+   * @description Test case to show validation error for a short password.
+   * Ensures that submitting the form with a short password displays the appropriate error message.
+   */
   it("should show validation error for short password", () => {
     // Fill out the form with a short password
     cy.get('input[id="username"]').type("johndoe");
@@ -97,7 +127,10 @@ describe("Sign Up Form", () => {
     cy.contains("Password must be at least 8 characters long").should("exist");
   });
 
-
+  /**
+   * @function shouldNavigateToLoginPage
+   * @description Test case to verify that clicking the "Sign in" link navigates to the login page.
+   */
   it("should navigate to login page", () => {
     // Click the link to navigate to the login page
     cy.get("a").contains("Sign in").click();
