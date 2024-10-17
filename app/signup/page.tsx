@@ -13,6 +13,11 @@ export default function SignUpForm() {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
 
+  // Helper function to validate email format
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleSubmit = async (e) => {
@@ -29,11 +34,19 @@ export default function SignUpForm() {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       newErrors.email = "Email is required";
+    } else if (!isValidEmail(email)) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      newErrors.email = "Invalid email format";
     }
     if (!password) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       newErrors.password = "Password is required";
+    } else if (password.length < 8) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      newErrors.password = "Password must be at least 8 characters long";
     }
 
     setErrors(newErrors);
@@ -109,7 +122,7 @@ export default function SignUpForm() {
                   <Label htmlFor="email">Email</Label>
                   <Input
                       id="email"
-                      type="email"
+                      type="text"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="johndoe@example.com"
