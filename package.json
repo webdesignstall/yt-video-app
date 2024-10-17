@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed:tasks": "tsx --tsconfig ./tsconfig.scripts.json ./app/dashboard/subscriptions/data/seed.ts"
+    "seed:tasks": "tsx --tsconfig ./tsconfig.scripts.json ./app/dashboard/subscriptions/data/seed.ts",
+    "cypress:open": "cypress open"
+
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
