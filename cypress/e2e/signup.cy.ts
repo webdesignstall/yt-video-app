@@ -41,6 +41,8 @@ describe("Sign Up Form", () => {
     cy.contains("Password is required").should("exist");
   });
 
+
+
   it("should show username and email already exists errors", () => {
     // Intercept the API call for this test with error response
     cy.intercept("POST", "/api/signup", {
@@ -65,6 +67,34 @@ describe("Sign Up Form", () => {
     // Assert that error messages are displayed
     cy.contains("Username already taken").should("exist");
     cy.contains("Email already taken").should("exist");
+  });
+
+  // New test case for invalid email
+  it("should show validation error for invalid email", () => {
+    // Fill out the form with an invalid email
+    cy.get('input[id="username"]').type("johndoe");
+    cy.get('input[id="email"]').type("invalid-email");
+    cy.get('input[id="password"]').type("password123");
+
+    // Click the submit button
+    cy.get("button[type='submit']").click();
+
+    // Assert that the invalid email message is displayed
+    cy.contains("Invalid email format").should("exist");
+  });
+
+  // New test case for short password
+  it("should show validation error for short password", () => {
+    // Fill out the form with a short password
+    cy.get('input[id="username"]').type("johndoe");
+    cy.get('input[id="email"]').type("johndoe@example.com");
+    cy.get('input[id="password"]').type("short");
+
+    // Click the submit button
+    cy.get("button[type='submit']").click();
+
+    // Assert that the short password message is displayed
+    cy.contains("Password must be at least 8 characters long").should("exist");
   });
 
 
