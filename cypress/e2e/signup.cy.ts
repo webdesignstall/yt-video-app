@@ -111,6 +111,24 @@ describe("Registration Tests", () => {
     cy.contains('Username already taken').should('exist');
   });
 
+
+  /**
+   * @function shouldShowValidationErrorForInvalidEmail
+   * @description Test case to show validation error for an invalid email format.
+   * Ensures that submitting the form with an invalid email displays the appropriate error message.
+   */
+  it("should show validation error for invalid email", () => {
+    // Fill out the form with an invalid email
+    cy.get('input[id="username"]').type("johndoe");
+    cy.get('input[id="email"]').type("invalid-email");
+    cy.get('input[id="password"]').type("password123");
+    // Click the submit button
+    cy.get("button[type='submit']").click();
+
+    // Assert that the invalid email message is displayed
+    cy.contains("Invalid email format").should("exist");
+  });
+
   /**
    * @function shouldShowValidationErrorForShortPassword
    * @description Tests that submitting the form with a short password displays the appropriate error message.
