@@ -11,12 +11,12 @@ TEST_TYPE=$(filter-out $@,$(MAKECMDGOALS))  # Allows passing test type, e.g., ma
 # Install all dependencies
 install:
 	@echo "Installing dependencies..."
-	npm install
+	npm install --legacy-peer-deps
 
 # Run Cypress tests in headless mode
 test:
 	@echo "Running Cypress tests in headless mode..."
-	$(CYPRESS) run --config baseUrl=$(CYPRESS_BASE_URL) --reporter $(CI_REPORTER) --reporter-options mochaFile=./results/results.xml
+	$(CYPRESS) run --headless --config baseUrl=$(CYPRESS_BASE_URL) --reporter $(CI_REPORTER) --reporter-options "mochaFile=./results/results.xml"
 
 # Run Cypress in interactive mode (opens the Cypress UI)
 open:
@@ -27,6 +27,9 @@ open:
 clean:
 	@echo "Cleaning up test results..."
 	rm -rf ./results
+
+# Run test with open mode
+run-gui: clean install open
 
 # Run tests with a specific target
 run: clean install test
@@ -40,4 +43,5 @@ help:
 	@echo "  make open          - Run Cypress in interactive mode"
 	@echo "  make clean         - Clean up test results"
 	@echo "  make run           - Clean, install, and run tests"
+	@echo "  make run-gui       - Clean, install, and run tests in interactive mode"
 	@echo "  make help          - Show this help message"
