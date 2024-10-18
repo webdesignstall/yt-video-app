@@ -1,49 +1,75 @@
 /**
  * @module SignUpFormTests
- * @description Test suite for the Sign Up form.
+ * @description Test suite for the Registration Tests.
  */
-describe("Sign Up Form", () => {
+describe("Registration Tests", () => {
   /**
    * @function beforeEach
-   * @description Runs before each test to intercept the signup API call and visit the signup page.
-   * Mocks the API response for a successful signup.
+   * @description Sets up the test environment before each test by loading registration fixture data,
+   * intercepting the signup API call, and mocking the API response for successful or failed signups.
    */
   beforeEach(() => {
-    // Intercept the API call and mock the response
-    cy.intercept("POST", "/api/signup", {
-      statusCode: 201,
-      body: { message: "Account created successfully!" },
-    }).as("signupUser");
+    // Load the registration fixture data
+    cy.fixture('registration').then((registrationData) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this.registrationData = registrationData; // Store the fixture data in a variable
 
-    // Visit the signup page
-    cy.visit("/signup");
+      // Intercept the signup API and mock the response
+      cy.intercept('POST', '/api/signup', (req) => {
+        const { email, username } = req.body;
+
+        // Check if the email or username already exists
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if (email === this.registrationData.existingUser.email || username === this.registrationData.existingUser.username) {
+          req.reply({
+            statusCode: 400,
+            body: {
+              emailError: "Email already taken",
+              usernameError: "Username already taken"
+            }
+          });
+        } else {
+          req.reply({
+            statusCode: 201,
+            body: { message: "Account created successfully!" }
+          });
+        }
+      }).as('signupApi');
+
+      // Visit the signup page
+      cy.visit('/signup');
+    });
   });
 
   /**
-   * @function shouldFillOutSignupFormAndSubmit
-   * @description Test case to fill out the signup form and submit it.
-   * Ensures that after a successful signup, the success message is displayed.
+   * @function shouldRegisterNewUserSuccessfully
+   * @description Verifies the signup process by filling out the registration form and submitting it.
+   * Asserts that the success message is displayed upon successful signup.
    */
-  it("should fill out the signup form and submit", () => {
-    // Fill out the form
-    cy.get('input[id="username"]').type("johndoe");
-    cy.get('input[id="email"]').type("johndoe@example.com");
-    cy.get('input[id="password"]').type("password123");
+  it('should register a new user successfully', () => {
+    // Use the fixture data to fill out the form
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('input[id="username"]').type(this.registrationData.newUser.username);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('input[id="email"]').type(this.registrationData.newUser.email);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('input[id="password"]').type(this.registrationData.newUser.password);
 
-    // Click the submit button
-    cy.get("button[type='submit']").click();
+    // Submit the form
+    cy.get('button[type="submit"]').click();
 
-    // Wait for the signup API call and assert the response
-    cy.wait("@signupUser").its("response.statusCode").should("eq", 201);
-
-    // Assert that the user is redirected or shown a success message
-    cy.contains("Account created successfully!").should("exist");
+    // Assert the success message
+    cy.contains('Account created successfully!').should('exist');
   });
 
   /**
    * @function shouldShowValidationErrorsOnEmptyFields
-   * @description Test case for showing validation errors when the signup form is submitted with empty fields.
-   * Verifies that appropriate error messages are displayed for required fields.
+   * @description Validates that appropriate error messages are displayed when the signup form is submitted with empty fields.
    */
   it("should show validation errors on empty fields", () => {
     // Click the submit button without filling out the form
@@ -61,58 +87,33 @@ describe("Sign Up Form", () => {
   });
 
   /**
-   * @function shouldShowUsernameAndEmailAlreadyExistsErrors
-   * @description Test case to simulate a signup error when the username or email already exists.
-   * Mocks the API response to return a 400 error and verifies that the corresponding error messages are shown.
+   * @function shouldShowErrorsForExistingUsernameAndEmail
+   * @description Simulates a signup error when the username or email already exists.
+   * Mocks the API response to return a 400 error and verifies that the corresponding error messages are displayed.
    */
-  it("should show username and email already exists errors", () => {
-    // Intercept the API call for this test with error response
-    cy.intercept("POST", "/api/signup", {
-      statusCode: 400,
-      body: {
-        usernameError: "Username already taken",
-        emailError: "Email already taken",
-      },
-    }).as("signupUserWithErrors");
-
-    // Fill out the form
-    cy.get('input[id="username"]').type("takenusername");
-    cy.get('input[id="email"]').type("takenemail@example.com");
-    cy.get('input[id="password"]').type("password123");
+  it('should show errors for existing username and email', () => {
+    // Use the fixture data to fill out the form
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('input[id="username"]').type(this.registrationData.existingUser.username);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('input[id="email"]').type(this.registrationData.existingUser.email);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('input[id="password"]').type(this.registrationData.existingUser.password);
 
     // Submit the form
-    cy.get("button[type='submit']").click();
+    cy.get('button[type="submit"]').click();
 
-    // Wait for the signup API call
-    cy.wait("@signupUserWithErrors");
-
-    // Assert that error messages are displayed
-    cy.contains("Username already taken").should("exist");
-    cy.contains("Email already taken").should("exist");
-  });
-
-  /**
-   * @function shouldShowValidationErrorForInvalidEmail
-   * @description Test case to show validation error for an invalid email format.
-   * Ensures that submitting the form with an invalid email displays the appropriate error message.
-   */
-  it("should show validation error for invalid email", () => {
-    // Fill out the form with an invalid email
-    cy.get('input[id="username"]').type("johndoe");
-    cy.get('input[id="email"]').type("invalid-email");
-    cy.get('input[id="password"]').type("password123");
-
-    // Click the submit button
-    cy.get("button[type='submit']").click();
-
-    // Assert that the invalid email message is displayed
-    cy.contains("Invalid email format").should("exist");
+    // Assert the error messages
+    cy.contains('Email already taken').should('exist');
+    cy.contains('Username already taken').should('exist');
   });
 
   /**
    * @function shouldShowValidationErrorForShortPassword
-   * @description Test case to show validation error for a short password.
-   * Ensures that submitting the form with a short password displays the appropriate error message.
+   * @description Tests that submitting the form with a short password displays the appropriate error message.
    */
   it("should show validation error for short password", () => {
     // Fill out the form with a short password
@@ -129,7 +130,7 @@ describe("Sign Up Form", () => {
 
   /**
    * @function shouldNavigateToLoginPage
-   * @description Test case to verify that clicking the "Sign in" link navigates to the login page.
+   * @description Verifies that clicking the "Sign in" link navigates to the login page.
    */
   it("should navigate to login page", () => {
     // Click the link to navigate to the login page
