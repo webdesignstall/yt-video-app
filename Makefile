@@ -28,6 +28,11 @@ clean:
 	@echo "Cleaning up test results..."
 	rm -rf ./results
 
+# Clean up previous test results
+doc:
+	@echo "Making doc for testing files..."
+	npm run jsdoc:make
+
 # Run test with open mode
 run-gui: clean install open
 
