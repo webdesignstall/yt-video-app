@@ -41,7 +41,7 @@ const profileFormSchema = z.object({
       required_error: "Please select an email to display.",
     })
     .email(),
-  bio: z.string().max(160).min(4),
+  bio: z.string().max(160).min(4, 'Bio must be at least 4 characters.'),
   urls: z
     .array(
       z.object({
@@ -75,6 +75,7 @@ export function ProfileForm() {
   })
 
   function onSubmit(data: ProfileFormValues) {
+
     toast({
       title: "You submitted the following values:",
       description: (
@@ -118,9 +119,10 @@ export function ProfileForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
+                  <SelectItem role="option" value="invalid-email">invalid-email</SelectItem>
+                  <SelectItem role="option" value="m@example.com">m@example.com</SelectItem>
+                  <SelectItem role="option" value="m@google.com">m@google.com</SelectItem>
+                  <SelectItem role="option" value="m@support.com">m@support.com</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>

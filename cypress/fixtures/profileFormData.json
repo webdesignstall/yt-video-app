@@ -1,0 +1,24 @@
+{
+  "validData": {
+    "username": "validUser",
+    "email": "m@example.com",
+    "bio": "I am a software engineer.",
+    "urls": [
+      { "value": "https://validurl.com" }
+    ],
+    "usernameChangesDays": 30
+  },
+  "invalidData": {
+    "username": "a",
+    "email": "invalid-email",
+    "bio": "abc",
+    "urls": [
+      { "value": "invalid-url" }
+    ],
+    "usernameChangesDays": 10
+  },
+  "partialValidData": {
+    "username": "anotherUser",
+    "bio": "This is my bio."
+  }
+}
