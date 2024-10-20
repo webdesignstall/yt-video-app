@@ -1,0 +1,20 @@
+{
+  "validCard": {
+    "firstName": "John Doe",
+    "cardNumber": "4111111111111111",
+    "month": "January",
+    "year": "2025",
+    "cvc": "123"
+  },
+  "invalidCard": {
+    "firstName": "John Doe",
+    "cardNumber": "1234567890123456",
+    "month": "January",
+    "year": "2025",
+    "cvc": "123"
+  },
+  "invalidCvc": "12",
+  "shortCardNumber": "124521",
+  "cardExpireMonth": "February",
+  "cardExpireYear": "2028"
+}
