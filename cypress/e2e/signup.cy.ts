@@ -58,7 +58,7 @@ describe("Registration Tests", () => {
     cy.get('input[id="email"]').type(this.registrationData.newUser.email);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    cy.get('input[id="password"]').type(this.registrationData.newUser.password);
+    cy.get('#password').type(this.registrationData.newUser.password);
 
     // Submit the form
     cy.get('button[type="submit"]').click();

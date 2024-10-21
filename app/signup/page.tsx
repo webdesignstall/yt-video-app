@@ -139,6 +139,7 @@ export default function SignUpForm() {
                 <div className="grid gap-2">
                   <Label htmlFor="password">Password</Label>
                   <Input
+                      data-cy="password"
                       id="password"
                       type="password"
                       value={password}
