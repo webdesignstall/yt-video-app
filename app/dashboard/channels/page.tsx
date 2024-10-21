@@ -48,7 +48,7 @@ export default function DashboardPage() {
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
                   <TabsTrigger value="public_video">Public Videos</TabsTrigger>
-                  <TabsTrigger value="settings">Settings</TabsTrigger>
+                  <TabsTrigger data-cy="settings-tab" value="settings">Settings</TabsTrigger>
                 </TabsList>
               </div>
               <TabsContent value="overview" className="space-y-4">

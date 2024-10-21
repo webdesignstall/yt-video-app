@@ -39,7 +39,7 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "Username must not be longer than 30 characters.",
     }),
-  description: z.string().max(160).min(4).optional(),
+  description: z.string().max(160, 'Description must not be longer than 160 characters.').min(4, 'Description must be at least 4 characters.').optional(),
   price_per_month: z.coerce.number().min(5),
   non_subscriber_access: z.union([z.literal("1"), z.literal("2")]),
   header_background: z.instanceof(File).optional(),
@@ -71,6 +71,7 @@ export function SettingsForm() {
         </pre>
       ),
     });
+
   }
 
   const handleFileChange = (
@@ -93,7 +94,7 @@ export function SettingsForm() {
             <FormItem>
               <FormLabel>Channel Name</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe Channel" {...field} />
+                <Input data-cy="channel-name" placeholder="John Doe Channel" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name that represents your channel.
@@ -109,7 +110,7 @@ export function SettingsForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="johndoepro" {...field} />
+                <Input data-cy="username" placeholder="johndoepro" {...field} />
               </FormControl>
               <FormDescription>
                 Username is unique and lowercase, used to identify your channel.
@@ -126,6 +127,7 @@ export function SettingsForm() {
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
+                  data-cy="description"
                   placeholder="Tell us a little bit about yourself"
                   className="resize-none"
                   {...field}
@@ -146,6 +148,7 @@ export function SettingsForm() {
                   Choose Header File
                 </Label>
                 <Input
+                  data-cy="header-file-input"
                   id="header-file-input"
                   type="file"
                   accept="image/*"
@@ -178,6 +181,7 @@ export function SettingsForm() {
                 Choose File
               </Label>
               <Input
+                data-cy="file-input"
                 id="file-input"
                 type="file"
                 accept="image/*"
@@ -195,7 +199,7 @@ export function SettingsForm() {
             <FormItem>
               <FormLabel>Price per Month ($)</FormLabel>
               <FormControl>
-                <Input defaultValue={5} type="number" {...field} />
+                <Input data-cy="price" defaultValue={5} type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -209,18 +213,19 @@ export function SettingsForm() {
               <FormLabel>Options for Non-Subscribers</FormLabel>
               <FormControl>
                 <RadioGroup
+
                   defaultValue="1"
                   onValueChange={field.onChange}
                   {...field}
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="1" id="option1" />
+                    <RadioGroupItem data-cy="option" value="1" id="option1" />
                     <Label htmlFor="option1">
                       Open channel but cannot see any video thumbnail
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="2" id="option2" />
+                    <RadioGroupItem data-cy="option" value="2" id="option2" />
                     <Label htmlFor="option2">
                       See any video thumbnail and open video-play page but
                       cannot play the video
