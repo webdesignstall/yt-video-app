@@ -73,10 +73,12 @@ export default function SignUpForm() {
       const responseData = await response.json();
       const newErrors = {};
       if (responseData?.usernameError) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         newErrors.username = responseData?.usernameError
       }
-      if (responseData?.usernameError) {
+      if (responseData?.emailError) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         newErrors.email = responseData?.emailError
       }
