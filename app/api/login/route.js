@@ -4,13 +4,13 @@ import path from "path";
 
 export async function POST(req) {
     // Path to the registration.json file
-    const fixturePath = path.join(process.cwd(), 'cypress', 'fixtures', 'login.json');
+    const fixturePath = path.join(process.cwd(), 'cypress', 'fixtures', 'registration.json');
 
     // Read and parse the registration.json file
-    let loginData;
+    let registrationData;
     try {
         const fileContents = fs.readFileSync(fixturePath, 'utf-8');
-        loginData = JSON.parse(fileContents);
+        registrationData = JSON.parse(fileContents);
     } catch (error) {
         return NextResponse.json({ error: "Error reading the registration.json file" }, { status: 500 });
     }
@@ -18,14 +18,10 @@ export async function POST(req) {
     const { email, password } = await req.json(); // parse the request body
 
     // Validate against the registration data from the JSON file
-    const isWrongEmail = loginData.some(user => user.validUser.email !== email);
-    const isWrongPassword = loginData.some(user => user.validUser.password !== password);
+    const isWrongEmail = registrationData.some(user => user.email !== email);
+    const isWrongPassword = registrationData.some(user => user.password !== password);
 
-    if (isWrongEmail) {
-        return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-    }
-
-    if (isWrongPassword) {
+    if (isWrongEmail && isWrongPassword) {
         return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 

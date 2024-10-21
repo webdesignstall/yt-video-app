@@ -8,7 +8,7 @@ describe("Sign In Form", () => {
    */
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-  let loginData;
+  let registrationData;
 
   /**
    * @function beforeEach
@@ -17,29 +17,9 @@ describe("Sign In Form", () => {
    */
   beforeEach(() => {
     // Load the login fixture data
-    cy.fixture('login').then((data) => {
-      loginData = data; // Assign to the variable
+    cy.fixture('registration').then((data) => {
+      registrationData = data; // Assign to the variable
     });
-
-    // Intercept the login API and mock the response
-    cy.intercept('POST', '/api/login', (req) => {
-      const { email, password } = req.body;
-
-      // Check against the loaded login data
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      if (email === loginData.validUser.email && password === loginData.validUser.password) {
-        req.reply({
-          statusCode: 200,
-          body: { message: "Login Successful!" }
-        });
-      } else {
-        req.reply({
-          statusCode: 401,
-          body: { error: "Invalid credentials" }
-        });
-      }
-    }).as('loginApi');
 
     // Visit the login page
     cy.visit('/login');
@@ -71,10 +51,10 @@ describe("Sign In Form", () => {
     // Use the fixture data to fill out the form
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    cy.get('input[id="email"]').type(loginData.invalidUser.email);
+    cy.get('input[id="email"]').type('invalid@example.com');
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    cy.get('input[id="password"]').type(loginData.invalidUser.password);
+    cy.get('input[id="password"]').type('wrongpassword');
 
     // Submit the form
     cy.get('button[type="submit"]').click();
@@ -92,10 +72,10 @@ describe("Sign In Form", () => {
     // Use the fixture data to fill out the form
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    cy.get('input[id="email"]').type(loginData.validUser.email);
+    cy.get('input[id="email"]').clear().type(registrationData[0].email);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    cy.get('input[id="password"]').type(loginData.validUser.password);
+    cy.get('input[id="password"]').clear().type(registrationData[0].password);
 
     // Submit the form
     cy.get('button[type="submit"]').click();

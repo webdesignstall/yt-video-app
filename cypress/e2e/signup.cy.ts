@@ -9,63 +9,9 @@ describe("Registration Tests", () => {
    * intercepting the signup API call, and mocking the API response for successful or failed signups.
    */
   beforeEach(() => {
-    // Load the registration fixture data
-    cy.fixture('registration').then((registrationData) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      this.registrationData = registrationData; // Store the fixture data in a variable
-
-      // Intercept the signup API and mock the response
-      cy.intercept('POST', '/api/signup', (req) => {
-        const { email, username } = req.body;
-
-        // Check if the email or username already exists
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        if (email === this.registrationData.existingUser.email || username === this.registrationData.existingUser.username) {
-          req.reply({
-            statusCode: 400,
-            body: {
-              emailError: "Email already taken",
-              usernameError: "Username already taken"
-            }
-          });
-        } else {
-          req.reply({
-            statusCode: 201,
-            body: { message: "Account created successfully!" }
-          });
-        }
-      }).as('signupApi');
-
       // Visit the signup page
       cy.visit('/signup');
     });
-  });
-
-  /**
-   * @function shouldRegisterNewUserSuccessfully
-   * @description Verifies the signup process by filling out the registration form and submitting it.
-   * Asserts that the success message is displayed upon successful signup.
-   */
-  it('should register a new user successfully', () => {
-    // Use the fixture data to fill out the form
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    cy.get('input[id="username"]').type(this.registrationData.newUser.username);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    cy.get('input[id="email"]').type(this.registrationData.newUser.email);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    cy.get('#password').type(this.registrationData.newUser.password);
-
-    // Submit the form
-    cy.get('button[type="submit"]').click();
-
-    // Assert the success message
-    cy.contains('Account created successfully!').should('exist');
-  });
 
   /**
    * @function shouldShowValidationErrorsOnEmptyFields
@@ -87,28 +33,66 @@ describe("Registration Tests", () => {
   });
 
   /**
+   * @function shouldRegisterNewUserSuccessfully
+   * @description Verifies the signup process by filling out the registration form and submitting it.
+   * Asserts that the success message is displayed upon successful signup.
+   */
+  it('should register a new user successfully or error', () => {
+    // Use the fixture data to fill out the form
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('input[id="username"]').type('jonyahmed19');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('input[id="email"]').type('jonyahmed19@gmail.com');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    cy.get('#password').type('password123');
+
+    // Submit the form
+    cy.get('button[type="submit"]').click();
+
+    // Assert the success message
+    cy.contains('Account created successfully!').should('exist');
+  });
+
+  /**
    * @function shouldShowErrorsForExistingUsernameAndEmail
    * @description Simulates a signup error when the username or email already exists.
    * Mocks the API response to return a 400 error and verifies that the corresponding error messages are displayed.
    */
   it('should show errors for existing username and email', () => {
     // Use the fixture data to fill out the form
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    cy.get('input[id="username"]').type(this.registrationData.existingUser.username);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    cy.get('input[id="email"]').type(this.registrationData.existingUser.email);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    cy.get('input[id="password"]').type(this.registrationData.existingUser.password);
+    cy.fixture('registration').then((registrationData) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      cy.get('input[id="username"]').clear().type(registrationData[0].username);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      cy.get('input[id="email"]').clear().type('new@gmail.com');
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      cy.get('input[id="password"]').clear().type('password1111');
 
-    // Submit the form
-    cy.get('button[type="submit"]').click();
+      // Submit the form
+      cy.get('button[type="submit"]').click();
+      // Assert the error messages
+      cy.contains('Username already taken').should('exist');
 
-    // Assert the error messages
-    cy.contains('Email already taken').should('exist');
-    cy.contains('Username already taken').should('exist');
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      cy.get('input[id="username"]').clear().type('newusername');
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      cy.get('input[id="email"]').clear().type(registrationData[0].email);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      cy.get('input[id="password"]').clear().type('password1111');
+      // Submit the form
+      cy.get('button[type="submit"]').click();
+      cy.contains('Email already taken').should('exist');
+
+    })
   });
 
 

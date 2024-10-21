@@ -2,24 +2,70 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
-export async function POST(req) {
-    // Path to the registration.json file
-    const fixturePath = path.join(process.cwd(), 'cypress', 'fixtures', 'registration.json');
+// Define the file path for the dummy database
+const filePath = path.join(process.cwd(), 'cypress','fixtures', 'registration.json');
 
-    // Read and parse the registration.json file
-    let registrationData;
-    try {
-        const fileContents = fs.readFileSync(fixturePath, 'utf-8');
-        registrationData = JSON.parse(fileContents);
-    } catch (error) {
-        return NextResponse.json({ error: "Error reading the registration.json file" }, { status: 500 });
+// Function to add new user data
+async function addNewUser(username, email, password) {
+    let data = [];
+
+    // Check if the file exists and is readable
+    if (fs.existsSync(filePath)) {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        try {
+            // Parse existing data if the file is not empty
+            data = JSON.parse(fileContent);
+
+            // Ensure the parsed data is an array
+            if (!Array.isArray(data)) {
+                data = [];  // If the parsed data is not an array, reinitialize it as an empty array
+            }
+        } catch (error) {
+            console.error('Error parsing JSON data, initializing as empty array:', error);
+            data = []; // Initialize as an empty array if there's a parsing error
+        }
     }
 
-    const { username, email } = await req.json(); // parse the request body
+    // Append new user data to the array
+    const newUser = { username, email, password };
+    data.push(newUser);
 
-    // Validate against the registration data from the JSON file
-    const isUsernameTaken = registrationData.some(user => user.existingUser.username === username);
-    const isEmailTaken = registrationData.some(user => user.existingUser.email === email);
+    // Try writing the updated data back to the file and return success/failure
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8'); // null, 2 is for pretty formatting
+        return { success: true, message: "Account created successfully!" };
+    } catch (error) {
+        console.error("Error writing to file:", error);
+        return { success: false, message: "Failed to store the user data." };
+    }
+
+}
+
+export async function POST(req) {
+
+    const { username, email, password } = await req.json(); // parse the request body
+
+    let existingData = [];
+    // Check if the file exists and is readable
+    if (fs.existsSync(filePath)) {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        try {
+            // Parse existing data if the file is not empty
+            existingData = JSON.parse(fileContent);
+
+            // Ensure the parsed data is an array
+            if (!Array.isArray(existingData)) {
+                existingData = [];  // If the parsed data is not an array, reinitialize it as an empty array
+            }
+        } catch (error) {
+            console.error('Error parsing JSON data, initializing as empty array:', error);
+            existingData = []; // Initialize as an empty array if there's a parsing error
+        }
+    }
+
+    const isUsernameTaken = existingData?.some(user => user.username === username);
+
+    const isEmailTaken = existingData?.some(user => user.email === email);
 
     if (isUsernameTaken) {
         return NextResponse.json({ usernameError: "Username already taken" }, { status: 400 });
@@ -29,7 +75,8 @@ export async function POST(req) {
         return NextResponse.json({ emailError: "Email already taken" }, { status: 400 });
     }
 
-    // Here you can add logic to create the user in your database
+// write seed users to seedUsers.json
+    const store = await addNewUser(username, email, password);
 
-    return NextResponse.json({ message: "Account created successfully!" }, { status: 201 });
+    return NextResponse.json({store, existingData}, { status: 201 });
 }
