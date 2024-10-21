@@ -14,5 +14,8 @@
         "ts-expect-error": false // or "allow-with-description" if you want to provide a description
       }
     ]
+  },
+  "env": {
+    "node": true
   }
 }
