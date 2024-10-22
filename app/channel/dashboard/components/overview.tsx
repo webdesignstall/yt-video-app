@@ -1,8 +1,9 @@
 "use client"
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import {Channel} from "node:diagnostics_channel";
 
-const data = [
+const olddata = [
   {
     name: "Jan",
     total: Math.floor(Math.random() * 5000) + 1000,
@@ -53,7 +54,9 @@ const data = [
   },
 ]
 
-export function Overview() {
+export function Overview({data}: {data: any}) {
+
+
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>

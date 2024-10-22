@@ -17,7 +17,7 @@ describe("Sign In Form", () => {
    */
   beforeEach(() => {
     // Load the login fixture data
-    cy.fixture('registration').then((data) => {
+    cy.fixture('db/registration').then((data) => {
       registrationData = data; // Assign to the variable
     });
 
