@@ -74,7 +74,8 @@ describe("Payment Card Update Form", () => {
   it("should update card information", () => {
     cy.fixture("dummyPaymentCardData").then((data) => {
       // Fill in the payment form with updated data from the fixture
-      cy.get('[data-cy="first-name"]').clear().type(data.updateCard.firstName);
+      cy.get('[data-cy="first-name"]').clear().type(data.updateCard.firstName).clear();
+      cy.get('[data-cy="first-name"]').type(data.updateCard.firstName);
       cy.get('[data-cy="card-number"]').clear().type(data.updateCard.cardNumber);
 
       // Open the month dropdown and select the month

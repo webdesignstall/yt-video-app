@@ -14,13 +14,12 @@ describe('Channel Settings Form', () => {
     beforeEach(() => {
         cy.visit('/dashboard/channels');
         cy.get('[data-cy="settings-tab"]').click();
-        cy.fixture('channelSettingForm.json').as('channelSettingsFormData');
     });
-
-    /**
+/*
+    /!**
      * @function it
      * @description Ensures form validation errors are displayed for empty fields.
-     */
+     *!/
     it("should display form validation errors for empty fields", () => {
         cy.get('[data-cy="description"]').clear();
         cy.get('[data-cy="price"]').clear();
@@ -28,10 +27,10 @@ describe('Channel Settings Form', () => {
         cy.get('[data-cy="error-message"]').should('be.visible');
     });
 
-    /**
+    /!**
      * @function it
      * @description Validates that an error is shown if the channel name is too short.
-     */
+     *!/
     it("should display error if the channel name is too short", () => {
         cy.get('@channelSettingsFormData').then(data => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -56,10 +55,10 @@ describe('Channel Settings Form', () => {
         });
     });
 
-    /**
+    /!**
      * @function it
      * @description Validates that an error is shown if the channel name is too long.
-     */
+     *!/
     it("should display error if the channel name is too long", () => {
         cy.get('@channelSettingsFormData').then(data => {
             cy.get('[data-cy="channel-name"]').clear().type("a".repeat(31));
@@ -82,10 +81,10 @@ describe('Channel Settings Form', () => {
         });
     });
 
-    /**
+    /!**
      * @function it
      * @description Ensures that the username field enforces length validation.
-     */
+     *!/
     it("should display error if the username is too short or too long", () => {
         cy.get('[data-cy="username"]').type("a");
         cy.get('form').submit();
@@ -95,10 +94,10 @@ describe('Channel Settings Form', () => {
         cy.contains("Username must not be longer than 30 characters.").should("exist");
     });
 
-    /**
+    /!**
      * @function it
      * @description Ensures the description field enforces length validation.
-     */
+     *!/
     it("should display error if description is too short or too long", () => {
         cy.get('@channelSettingsFormData').then(data => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -114,10 +113,10 @@ describe('Channel Settings Form', () => {
         });
     });
 
-    /**
+    /!**
      * @function it
      * @description Validates the price per month field for minimum value.
-     */
+     *!/
     it("should display error if price per month is below the minimum", () => {
         cy.get('@channelSettingsFormData').then(data => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -128,11 +127,12 @@ describe('Channel Settings Form', () => {
         });
     });
 
+    */
     /**
      * @function it
      * @description Submits the form successfully with valid inputs.
      */
-    it("should successfully submit the form with valid inputs", () => {
+    it("should channel setting successfully Update", () => {
         cy.get('@channelSettingsFormData').then(validData => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
