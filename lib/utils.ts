@@ -16,7 +16,7 @@ export function cn(...inputs: ClassValue[]) {
 export const storeData = async (newData, filename, fs, path) => {
 
   // Define the file path for the dummy database
-  const filePath = path.join(process.cwd(), 'cypress','fixtures', `${filename}.json`);
+  const filePath = path.join(process.cwd(), 'cypress','fixtures','db', `${filename}.json`);
   let data = [];
 
   // Check if the file exists and is readable
@@ -55,7 +55,7 @@ export const storeData = async (newData, filename, fs, path) => {
 export const storeAndUpdateData = async (newData, filename, fs, path) => {
 
   // Define the file path for the dummy database
-  const filePath = path.join(process.cwd(), 'cypress','fixtures', `${filename}.json`);
+  const filePath = path.join(process.cwd(), 'cypress','fixtures','db', `${filename}.json`);
 
   // Try writing the updated data back to the file and return success/failure
   try {
@@ -70,7 +70,7 @@ export const storeAndUpdateData = async (newData, filename, fs, path) => {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 export const getData = async (filename, fs, path) => {
-  const filePath = path.join(process.cwd(), 'cypress','fixtures', `${filename}.json`);
+  const filePath = path.join(process.cwd(), 'cypress','fixtures','db', `${filename}.json`);
   let data = [];
   // Check if the file exists and is readable
   if (fs.existsSync(filePath)) {

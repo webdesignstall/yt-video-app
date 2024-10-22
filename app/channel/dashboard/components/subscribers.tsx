@@ -1,4 +1,4 @@
-import { SubscriptionsTable } from "@/app/dashboard/subscriptions/subscriptions-table";
+import  SubscriptionsTable  from "@/app/dashboard/subscriptions/subscriptions-table";
 
 export function Subscribers() {
   return (

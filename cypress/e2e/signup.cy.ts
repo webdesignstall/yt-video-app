@@ -63,7 +63,7 @@ describe("Registration Tests", () => {
    */
   it('should show errors for existing username and email', () => {
     // Use the fixture data to fill out the form
-    cy.fixture('registration').then((registrationData) => {
+    cy.fixture('db/registration').then((registrationData) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       cy.get('input[id="username"]').clear().type(registrationData[0].username);

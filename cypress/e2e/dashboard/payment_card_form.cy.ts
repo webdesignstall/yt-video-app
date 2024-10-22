@@ -103,7 +103,7 @@ describe("Payment Card Update Form", () => {
    * @description Tests that the payment card form fetches and populates existing card information correctly.
    */
   it("should fetch and populate the form with card information", () => {
-    cy.fixture("payment-card").then((data) => {
+    cy.fixture("db/payment-card").then((data) => {
       // Intercept the API call to fetch payment card data
       cy.intercept('GET', '/api/payment-card', {
         statusCode: 200,

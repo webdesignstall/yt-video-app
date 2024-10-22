@@ -1,0 +1,96 @@
+[
+  {
+    "name": "Gwendolyn Burris",
+    "username": "wefozy",
+    "description": "Cillum Nam et accusa",
+    "price_per_month": "27",
+    "option": "1",
+    "logo": "",
+    "coverPhoto": "",
+    "overview": {
+        "cards": [
+          {
+            "title": "Total Revenue",
+            "value": "40,231.89",
+            "increase": "+20.1"
+          },
+          {
+            "title": "Subscriptions",
+            "value": "2350",
+            "increase": "+180.1"
+          },
+          {
+            "title": "Sales",
+            "value": "+12,234",
+            "increase": "+19"
+          },
+          {
+            "title": "Active Now",
+            "value": "573"
+          }
+        ],
+
+          "sales": {
+            "data": [
+              { "name": "Jan", "total": 1234 },
+              { "name": "Feb", "total": 2345 },
+              { "name": "Mar", "total": 3456 },
+              { "name": "Apr", "total": 4567 },
+              { "name": "May", "total": 5678 },
+              { "name": "Jun", "total": 6789 },
+              { "name": "Jul", "total": 7890 },
+              { "name": "Aug", "total": 8901 },
+              { "name": "Sep", "total": 9012 },
+              { "name": "Oct", "total": 10123 },
+              { "name": "Nov", "total": 11234 },
+              { "name": "Dec", "total": 12345 }
+            ]
+          },
+      "subscribers": {
+            "data": [
+              { "name": "Jan", "total": 1500 },
+              { "name": "Feb", "total": 1600 },
+              { "name": "Mar", "total": 1700 }
+            ]
+          },
+      "views": {
+            "data": [
+              { "name": "Jan", "total": 2000 },
+              { "name": "Feb", "total": 2100 },
+              { "name": "Mar", "total": 2200 }
+            ]
+          },
+
+      "recentSales": [
+        {
+          "username": "@oliviamartin",
+          "type": "New Subscribers",
+          "amount": "+$1,999.00"
+        },
+        {
+          "username": "@jacksonlee",
+          "type": "Renewal",
+          "amount": "+$39.00"
+        },
+        {
+          "username": "@isabellanguyen",
+          "type": "New Subscribers",
+          "amount": "+$299.00"
+        },
+        {
+          "username": "@williamkim",
+          "type": "New Subscribers",
+          "amount": "+$99.00"
+        }
+      ]
+    }
+
+  },
+  {
+    "name": "Robin Curry",
+    "username": "kizuqyhe",
+    "description": "Vel magnam asperiore",
+    "price_per_month": "672",
+    "option": "2"
+  }
+]
