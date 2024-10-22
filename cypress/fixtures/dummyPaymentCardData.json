@@ -1,17 +1,17 @@
 {
-  "validCard": {
-    "firstName": "John Doe",
+  "newCard": {
+    "firstName": "Jony Ahmed",
     "cardNumber": "4111111111111111",
-    "month": "January",
+    "month": "2",
     "year": "2025",
     "cvc": "123"
   },
-  "invalidCard": {
-    "firstName": "John Doe",
+  "updateCard": {
+    "firstName": "Jony Ahmed Update",
     "cardNumber": "1234567890123456",
-    "month": "January",
-    "year": "2025",
-    "cvc": "123"
+    "month": "3",
+    "year": "2026",
+    "cvc": "444"
   },
   "invalidCvc": "12",
   "shortCardNumber": "124521",

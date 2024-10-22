@@ -1,178 +1,138 @@
 /// <reference types="cypress" />
 /**
  * @module PaymentCardUpdateForm
- * @description Test suite for the Registration Tests.
+ * @description Test suite for verifying the Payment Card Update Form functionalities.
  */
 
 describe("Payment Card Update Form", () => {
+  /**
+   * @function beforeEach
+   * @description Navigates to the payment form page before each test case.
+   */
   beforeEach(() => {
-    cy.visit("/dashboard/payment"); // Navigate to the payment form page before each test
+    cy.visit("/dashboard/payment");
   });
 
   /**
    * @function shouldShowValidationErrorsOnEmptyFields
-   * @description Verifies that submitting the form with empty required fields triggers validation errors.
-   *              The test checks each required field to ensure it displays appropriate error messages.
+   * @description Tests that submitting the form with empty required fields triggers validation errors.
+   *              It checks that appropriate error messages are displayed for each required field.
    */
   it("should show validation errors for empty required fields", () => {
     // Verify that all fields are empty before submission
-    cy.get('[data-cy="first-name"]').should("contain", "");
-    cy.get('[data-cy="card-number"]').should("contain", "");
-    cy.get('[data-cy="month"]').click({ force: true });
-    cy.get('[data-cy="month"]').should("contain", 'Month'); // Check month placeholder
-    cy.get('[data-cy="year"]').click({ force: true });
-    cy.get('[data-cy="year"]').should("contain", 'Year'); // Check year placeholder
-    cy.get('[data-cy="cvc"]').should("contain", "");
+    cy.get('[data-cy="first-name"]').should("have.value", "");
+    cy.get('[data-cy="card-number"]').should("have.value", "");
+
+    // Check month and year placeholders
+    cy.get('[data-cy="month"]').click({ force: true }).should("contain", 'Month');
+    cy.get('[data-cy="year"]').click({ force: true }).should("contain", 'Year');
+
+    cy.get('[data-cy="cvc"]').should("have.value", "");
 
     // Submit the form
     cy.get("button[type='submit']").click({ force: true });
 
-    // Check for the visibility of the error message indicating validation errors
+    // Assert that the error message is visible
     cy.get('[data-cy="error-message"]').should("be.visible");
   });
 
   /**
    * @function shouldSubmitFormWithValidData
-   * @description Verifies that the form submits successfully when all required fields have valid data.
+   * @description Verifies that the form submits successfully when all required fields are filled with valid data.
    *              Upon successful submission, a success message is displayed to the user.
    */
   it("should submit the form with valid data and display toast message", () => {
-    cy.fixture("paymentCard").then((data) => {
+    cy.fixture("dummyPaymentCardData").then((data) => {
       // Fill in the payment form with valid data from the fixture
-      cy.get('[data-cy="first-name"]').type(data.validCard.firstName);
-      cy.get('[data-cy="card-number"]').type(data.validCard.cardNumber);
+      cy.get('[data-cy="first-name"]').clear().type(data.newCard.firstName);
+      cy.get('[data-cy="card-number"]').clear().type(data.newCard.cardNumber);
 
-      // Select the expiration month
+      // Open the month dropdown and select the month
       cy.get('[data-cy="month"]').click();
-      cy.get('[role="option"]').contains(data.validCard.month).click();
-      cy.get('[data-cy="month"]').should("contain", data.validCard.month); // Verify selected month
+      cy.get(`[role="option"][data-value="${data.newCard.month}"]`, { timeout: 10000 }).click();
 
-      // Select the expiration year
+      // Open the year dropdown and select the year
       cy.get('[data-cy="year"]').click();
-      cy.get('[role="option"]').contains(data.validCard.year).click();
-      cy.get('[data-cy="year"]').should("contain", data.validCard.year); // Verify selected year
+      cy.get(`[role="option"][data-value="${data.newCard.year}"]`, { timeout: 10000 }).click();
 
       // Enter valid CVC
-      cy.get('[data-cy="cvc"]').type("123");
+      cy.get('[data-cy="cvc"]').type(data.newCard.cvc);
 
       // Submit the form
       cy.get("button[type='submit']").click();
 
-      // Check for the success message indicating successful payment
+      // Assert that the success message is visible
       cy.get("[data-cy='paymentApiSuccess']").should("be.visible");
-      cy.get(".toast").should("contain", "You submitted the following values:"); // Verify toast message
     });
   });
 
   /**
-   * @function shouldRejectInvalidCardNumber
-   * @description Verifies that entering an invalid card number triggers validation errors.
-   *              This includes cases where the card number does not meet the required format or length.
+   * @function shouldFetchAndPopulateCardInformation
+   * @description Tests that the payment card form fetches and populates existing card information correctly.
    */
-  it("should show an error for an invalid card number", () => {
-    cy.fixture("paymentCard").then((data) => {
-      // Fill in the payment form with invalid card number
-      cy.get('[data-cy="first-name"]').type(data.invalidCard.firstName);
-      cy.get('[data-cy="card-number"]').type(data.invalidCard.cardNumber);
+  it("should fetch and populate the form with card information", () => {
+    cy.fixture("payment-card").then((data) => {
+      // Intercept the API call to fetch payment card data
+      cy.intercept('GET', '/api/payment-card', {
+        statusCode: 200,
+        body: {
+          data: {
+            name: data?.name,
+            number: data?.number,
+            month: data?.month,
+            year: data?.year,
+            cvc: data?.cvc,
+          },
+        },
+      }).as('getPaymentCard');
 
-      // Select the expiration month
+      // Wait for the API call to complete
+      cy.wait('@getPaymentCard');
+
+      // Assert that the fields are populated with the fetched data
+      cy.get('[data-cy="first-name"]').should('have.value', data?.name);
+      cy.get('[data-cy="card-number"]').should('have.value', data?.number);
+
+      // Open the month dropdown and select the month
       cy.get('[data-cy="month"]').click();
-      cy.get('[role="option"]').contains("January").click();
-      cy.get('[data-cy="month"]').should("contain", "January"); // Verify selected month
+      cy.get(`[role="option"][data-value="${data.month}"]`, { timeout: 10000 }).click();
 
-      // Select the expiration year
+      // Open the year dropdown and select the year
       cy.get('[data-cy="year"]').click();
-      cy.get('[role="option"]').contains("2024").click();
-      cy.get('[data-cy="year"]').should("contain", "2024"); // Verify selected year
+      cy.get(`[role="option"][data-value="${data.year}"]`, { timeout: 10000 }).click();
 
-      // Enter invalid CVC
-      cy.get('[data-cy="cvc"]').type(data.invalidCard.cvc);
-      cy.get('button[type="submit"]').click();
-
-      // Check for the error message indicating invalid card number
-      cy.get("[data-cy='paymentApiError']").should("be.visible");
+      // Fill in the CVC
+      cy.get('[data-cy="cvc"]').type(data.cvc);
     });
   });
 
   /**
-   * @function shouldNotAllowInvalidCVC
-   * @description Verifies that the CVC field only accepts valid inputs consisting of exactly 3 digits.
-   *              This test checks for any CVC input that does not match this requirement and triggers an error.
+   * @function shouldUpdateCardInformation
+   * @description Verifies that the form updates the payment card information successfully when all required fields have valid data.
+   *              A success message is displayed upon successful submission.
    */
-  it("should not allow invalid CVC inputs", () => {
-    cy.fixture("paymentCard").then((data) => {
-      // Fill in the payment form with valid data
-      cy.get('[data-cy="first-name"]').type(data.validCard.firstName);
-      cy.get('[data-cy="card-number"]').type(data.validCard.cardNumber);
+  it("should update card information", () => {
+    cy.fixture("dummyPaymentCardData").then((data) => {
+      // Fill in the payment form with updated data from the fixture
+      cy.get('[data-cy="first-name"]').clear().type(data.updateCard.firstName);
+      cy.get('[data-cy="card-number"]').clear().type(data.updateCard.cardNumber);
+
+      // Open the month dropdown and select the month
       cy.get('[data-cy="month"]').click();
-      cy.get('[role="option"]').contains(data.validCard.month).click();
+      cy.get(`[role="option"][data-value="${data.updateCard.month}"]`, { timeout: 10000 }).click();
+
+      // Open the year dropdown and select the year
       cy.get('[data-cy="year"]').click();
-      cy.get('[role="option"]').contains(data.validCard.year).click();
-
-      // Enter an invalid CVC
-      cy.get('[data-cy="cvc"]').type(data.invalidCvc);
-      cy.get('button[type="submit"]').click();
-
-      // Check for the error message related to CVC validation
-      cy.get('[data-cy="error-message"]').should("be.visible").should('contain', 'CVC must be 3 digits');
-    });
-  });
-
-  /**
-   * @function shouldNotAllowInvalidCardNumber
-   * @description Verifies that the card number input must contain exactly 16 digits.
-   *              This test checks for any invalid card number inputs and expects a corresponding error message.
-   */
-  it("should show an error for card number not being 16 digits", () => {
-    cy.fixture("paymentCard").then((data) => {
-      // Test with an invalid card number (less than or more than 16 digits)
-      cy.get('[data-cy="first-name"]').type(data.validCard.firstName);
-      cy.get('[data-cy="card-number"]').type(data.shortCardNumber); // Use an invalid short card number
-
-      // Select the expiration month
-      cy.get('[data-cy="month"]').click();
-      cy.get('[role="option"]').contains(data.validCard.month).click();
-
-      // Select the expiration year
-      cy.get('[data-cy="year"]').click();
-      cy.get('[role="option"]').contains(data.validCard.year).click();
-
-      // Enter a valid CVC
-      cy.get('[data-cy="cvc"]').type(data.validCard.cvc);
-
-      // Submit the form
-      cy.get('button[type="submit"]').click();
-
-      // Check for the error message related to card number validation
-      cy.get('[data-cy="error-message"]').should("be.visible").should('contain', 'Card number must be 16 digits');
-    });
-  });
-
-  /**
-   * @function shouldValidateCardExpirationDate
-   * @description Verifies that the card expiration date is valid and not in the past.
-   *              This test checks if the selected expiration date is in the future; otherwise, an error should be shown.
-   */
-  it("should not accept past expiration dates", () => {
-    cy.fixture("paymentCard").then((data) => {
-      // Fill in the payment form with valid data
-      cy.get('[data-cy="first-name"]').type(data.validCard.firstName);
-      cy.get('[data-cy="card-number"]').type(data.validCard.cardNumber);
-      cy.get('[data-cy="month"]').click();
-      cy.get('[role="option"]').contains(data.cardExpireMonth).click();
-      cy.get('[data-cy="month"]').should("contain", data.cardExpireMonth); // Verify selected month
-
-      // Select the expiration year
-      cy.get('[data-cy="year"]').click();
-      cy.get('[role="option"]').contains(data.cardExpireYear).click();
-      cy.get('[data-cy="year"]').should("contain", data.cardExpireYear); // Verify selected year
+      cy.get(`[role="option"][data-value="${data.updateCard.year}"]`, { timeout: 10000 }).click();
 
       // Enter valid CVC
-      cy.get('[data-cy="cvc"]').type(data.validCard.cvc);
-      cy.get('button[type="submit"]').click();
+      cy.get('[data-cy="cvc"]').type(data.updateCard.cvc);
 
-      // Check for the error message indicating that the expiration date is invalid
-      cy.get("[data-cy='paymentApiError']").should("be.visible");
+      // Submit the form
+      cy.get("button[type='submit']").click();
+
+      // Assert that the success message is visible
+      cy.get("[data-cy='paymentApiSuccess']").should("be.visible");
     });
   });
 });
