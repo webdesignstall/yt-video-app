@@ -64,12 +64,51 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
-interface TeamSwitcherProps extends PopoverTriggerProps {}
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+type TeamSwitcherProps = PopoverTriggerProps
 
 export default function TeamSwitcher({ className }: TeamSwitcherProps) {
   const [open, setOpen] = React.useState(false);
   const [showNewTeamSheet, setShowNewTeamSheet] = React.useState(false);
   const [selectedTeam, setSelectedTeam] = React.useState<Team>(groups.teams[0]);
+  const [successMsg, setSuccessMsg] = React.useState();
+  const [errorMsg, setErrorMsg] = React.useState();
+
+  // @ts-ignore
+  const onsubmit = async (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const username = e.target.username.value;
+    const description = e.target.description.value;
+    const price_per_month = e.target.price_per_month.value;
+    const option = e.target.option.value;
+
+
+    const response = await fetch("/api/channel", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        username,
+        description,
+        price_per_month,
+        option
+      }),
+    });
+    const result = await response.json();
+    if (response.ok) {
+      console.log(result?.message);
+      setSuccessMsg(result?.message)
+      setShowNewTeamSheet(false)
+    }else {
+      console.log(result?.error);
+      setErrorMsg(result?.error)
+      setShowNewTeamSheet(true)
+    }
+  }
 
   return (
     <Sheet open={showNewTeamSheet} onOpenChange={setShowNewTeamSheet}>
@@ -141,7 +180,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                     }}
                   >
                     <PlusCircledIcon className="mr-2 h-5 w-5" />
-                    Create Channel
+                    <p data-cy='channel-create-modal-open-btn'> Create Channel </p>
                   </CommandItem>
                 </SheetTrigger>
               </CommandGroup>
@@ -151,31 +190,41 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
       </Popover>
       <SheetContent className="w-1/2">
         <SheetHeader>
+          {
+            successMsg &&  <SheetTitle data-cy='apiResponse-msg' className='text-green-500'>{successMsg}</SheetTitle>
+          }
+          {
+            errorMsg &&  <SheetTitle data-cy='apiResponse-msg' className='text-red-500'>{errorMsg}</SheetTitle>
+          }
+
           <SheetTitle>New Channel</SheetTitle>
           <SheetDescription>
             Fill the required fields below to create a new channel.
           </SheetDescription>
         </SheetHeader>
+        {/*@ts-ignore*/}
+        <form data-cy='channel-form' onSubmit={onsubmit}>
+
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
               Title
             </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+            <Input data-cy='channel-name' name='name' id="name" className="col-span-3" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
               Username
             </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
+            <Input data-cy='username' name='username' id="username"  className="col-span-3" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="description" className="text-right">
               Description
             </Label>
             <Input
+              data-cy='description' name='description'
               id="description"
-              value="Pedro Duarte"
               className="col-span-3"
             />
           </div>
@@ -184,9 +233,9 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               Price Per Month ($)
             </Label>
             <Input
+              data-cy='price_per_month' name='price_per_month'
               id="price_per_month"
               type="number"
-              defaultValue="5"
               min="5"
               className="col-span-3"
             />
@@ -195,10 +244,10 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
             <Label htmlFor="non_subscriber_access" className="text-right">
               Access for Non Subscribers
             </Label>
-            <RadioGroup className="w-full space-y-4">
+            <RadioGroup name='option' data-cy='option' className="w-full space-y-4">
               <div>
                 <RadioGroupItem
-                  value="card"
+                  value="1"
                   id="card"
                   className="peer sr-only"
                 />
@@ -221,7 +270,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               </div>
               <div>
                 <RadioGroupItem
-                  value="paypal"
+                  value="2"
                   id="paypal"
                   className="peer sr-only"
                 />
@@ -244,10 +293,11 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
           </div>
         </div>
         <SheetFooter>
-          <SheetClose asChild>
+          {/*<SheetClose value={showNewTeamSheet} asChild>*/}
             <Button type="submit">Save changes</Button>
-          </SheetClose>
+          {/*</SheetClose>*/}
         </SheetFooter>
+        </form>
       </SheetContent>
     </Sheet>
   );
