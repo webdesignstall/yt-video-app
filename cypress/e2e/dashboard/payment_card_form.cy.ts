@@ -67,6 +67,37 @@ describe("Payment Card Update Form", () => {
   });
 
   /**
+   * @function shouldUpdateCardInformation
+   * @description Verifies that the form updates the payment card information successfully when all required fields have valid data.
+   *              A success message is displayed upon successful submission.
+   */
+  it("should update card information", () => {
+    cy.fixture("dummyPaymentCardData").then((data) => {
+      // Fill in the payment form with updated data from the fixture
+      cy.get('[data-cy="first-name"]').clear().type(data.updateCard.firstName);
+      cy.get('[data-cy="card-number"]').clear().type(data.updateCard.cardNumber);
+
+      // Open the month dropdown and select the month
+      cy.get('[data-cy="month"]').click();
+      cy.get(`[role="option"][data-value="${data.updateCard.month}"]`, { timeout: 10000 }).click();
+
+      // Open the year dropdown and select the year
+      cy.get('[data-cy="year"]').click();
+      cy.get(`[role="option"][data-value="${data.updateCard.year}"]`, { timeout: 10000 }).click();
+
+      // Enter valid CVC
+      cy.get('[data-cy="cvc"]').type(data.updateCard.cvc);
+
+      // Submit the form
+      cy.get("button[type='submit']").click();
+
+      // Assert that the success message is visible
+      cy.get("[data-cy='paymentApiSuccess']").should("be.visible");
+    });
+  });
+
+
+  /**
    * @function shouldFetchAndPopulateCardInformation
    * @description Tests that the payment card form fetches and populates existing card information correctly.
    */
@@ -103,36 +134,6 @@ describe("Payment Card Update Form", () => {
 
       // Fill in the CVC
       cy.get('[data-cy="cvc"]').type(data.cvc);
-    });
-  });
-
-  /**
-   * @function shouldUpdateCardInformation
-   * @description Verifies that the form updates the payment card information successfully when all required fields have valid data.
-   *              A success message is displayed upon successful submission.
-   */
-  it("should update card information", () => {
-    cy.fixture("dummyPaymentCardData").then((data) => {
-      // Fill in the payment form with updated data from the fixture
-      cy.get('[data-cy="first-name"]').clear().type(data.updateCard.firstName);
-      cy.get('[data-cy="card-number"]').clear().type(data.updateCard.cardNumber);
-
-      // Open the month dropdown and select the month
-      cy.get('[data-cy="month"]').click();
-      cy.get(`[role="option"][data-value="${data.updateCard.month}"]`, { timeout: 10000 }).click();
-
-      // Open the year dropdown and select the year
-      cy.get('[data-cy="year"]').click();
-      cy.get(`[role="option"][data-value="${data.updateCard.year}"]`, { timeout: 10000 }).click();
-
-      // Enter valid CVC
-      cy.get('[data-cy="cvc"]').type(data.updateCard.cvc);
-
-      // Submit the form
-      cy.get("button[type='submit']").click();
-
-      // Assert that the success message is visible
-      cy.get("[data-cy='paymentApiSuccess']").should("be.visible");
     });
   });
 });
