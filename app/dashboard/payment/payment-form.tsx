@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const paymentFormSchema = z.object({
   name: z.string({message: "Name is required"}),
@@ -42,6 +42,7 @@ export function PaymentForm() {
 
     const [error, setError] = useState('')
     const [successMsg, setSuccessMsg] = useState('')
+    const [card, setCard] = useState()
 
   async function onSubmit(data: PaymentFormValues) {
 
@@ -78,6 +79,23 @@ export function PaymentForm() {
     }
   }
 
+  const fetchCardInfo = async () => {
+      const response = await fetch("/api/payment-card", {method: 'GET'});
+      const {data} = await response.json();
+      return data;
+  }
+    useEffect(() => {
+        (async () => {
+            const data = await fetchCardInfo();
+            form.setValue('name', data?.name);
+            form.setValue('number', data?.number);
+            form.setValue('month', data?.month);
+            form.setValue('year', data?.year);
+            form.setValue('cvc', data?.cvc);
+        })()
+        fetchCardInfo().catch()
+    }, []);
+
   return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-sm">
@@ -112,23 +130,23 @@ export function PaymentForm() {
                 render={({ field }) => (
                     <FormItem>
                       <Label htmlFor="month">Month</Label>
-                      <Select onValueChange={field.onChange}>
+                      <Select value={field.value} onValueChange={field.onChange}>
                         <SelectTrigger data-cy="month" id="month">
                           <SelectValue placeholder="Month" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem role="option" value="1">January</SelectItem>
-                          <SelectItem role="option" value="2">February</SelectItem>
-                          <SelectItem role="option" value="3">March</SelectItem>
-                          <SelectItem role="option" value="4">April</SelectItem>
-                          <SelectItem role="option" value="5">May</SelectItem>
-                          <SelectItem role="option" value="6">June</SelectItem>
-                          <SelectItem role="option" value="7">July</SelectItem>
-                          <SelectItem role="option" value="8">August</SelectItem>
-                          <SelectItem role="option" value="9">September</SelectItem>
-                          <SelectItem role="option" value="10">October</SelectItem>
-                          <SelectItem role="option" value="11">November</SelectItem>
-                          <SelectItem role="option" value="12">December</SelectItem>
+                          <SelectItem role="option" data-value='1' value="1">January</SelectItem>
+                          <SelectItem role="option" data-value='2' value="2">February</SelectItem>
+                          <SelectItem role="option" data-value='3' value="3">March</SelectItem>
+                          <SelectItem role="option" data-value='4' value="4">April</SelectItem>
+                          <SelectItem role="option" data-value='5' value="5">May</SelectItem>
+                          <SelectItem role="option" data-value='6' value="6">June</SelectItem>
+                          <SelectItem role="option" data-value='7' value="7">July</SelectItem>
+                          <SelectItem role="option" data-value='8' value="8">August</SelectItem>
+                          <SelectItem role="option" data-value='9' value="9">September</SelectItem>
+                          <SelectItem role="option" data-value='10' value="10">October</SelectItem>
+                          <SelectItem role="option" data-value='11' value="11">November</SelectItem>
+                          <SelectItem role="option" data-value='12' value="12">December</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -141,7 +159,7 @@ export function PaymentForm() {
                 render={({ field }) => (
                     <FormItem>
                       <Label htmlFor="year">Year</Label>
-                      <Select onValueChange={field.onChange}>
+                      <Select value={field.value} onValueChange={field.onChange}>
                         <SelectTrigger data-cy="year" id="year">
                           <SelectValue placeholder="Year" />
                         </SelectTrigger>
@@ -150,6 +168,8 @@ export function PaymentForm() {
                               <SelectItem
                                   key={i}
                                   value={`${new Date().getFullYear() + i}`}
+                                  data-value={`${new Date().getFullYear() + i}`}
+                                  role="option"
                               >
                                 {new Date().getFullYear() + i}
                               </SelectItem>
