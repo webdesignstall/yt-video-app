@@ -38,14 +38,13 @@ export default function DashboardPage() {
   const getChannels = async ()=> {
     const response = await fetch("/api/channel", {method: 'GET'});
     const {data} = await response.json();
-    return data;
+    setChannels(data);
+    setSelectedTeam(data[0])
   }
 
   useEffect(() => {
     (async ()=> {
-      const data = await getChannels();
-      setChannels(data);
-      setSelectedTeam(data[0])
+       await getChannels();
     })()
   }, []);
 
@@ -70,7 +69,7 @@ export default function DashboardPage() {
           <div className="flex-1 space-y-4">
             <Tabs defaultValue="overview" className="space-y-4">
               <div className="flex items-center justify-start space-x-4">
-                <TeamSwitcher channels={channels} selectedTeam={selectedTeam} setSelectedTeam={setSelectedTeam} />
+                <TeamSwitcher channels={channels} selectedTeam={selectedTeam} setSelectedTeam={setSelectedTeam} getChannels={getChannels} />
                 <TabsList>
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
@@ -159,13 +158,13 @@ export default function DashboardPage() {
                 </div>
               </TabsContent>
               <TabsContent value="subscribers" className="space-y-4">
-                <Subscribers />
+                <Subscribers data={selectedChannel?.subscribers?.length ? selectedChannel.subscribers : []} />
               </TabsContent>
               <TabsContent value="public_video" className="space-y-4">
-                <PublicVideos />
+                <PublicVideos data={selectedChannel?.publicVideos?.length ? selectedChannel.publicVideos : []} />
               </TabsContent>
               <TabsContent value="settings" className="space-y-4">
-                <SettingsForm />
+                <SettingsForm data={selectedChannel} getChannels={getChannels} />
               </TabsContent>
             </Tabs>
           </div>

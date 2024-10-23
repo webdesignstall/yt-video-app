@@ -25,22 +25,22 @@ import { DataTable } from "./data-table";
   return z.array(publicVideoSchema).parse(tasks);
 }*/
 
-export function PublicVideoItems() {
+export function PublicVideoItems({data}: {data: any}) {
   // const tasks = await getTasks();
   const tasks: any = [];
 
   return (
     <>
-      <DataTable data={tasks} columns={columns} />
+      <DataTable data={data} columns={columns} />
     </>
   );
 }
 
-export default function PublicVideos() {
+export default function PublicVideos({data}: {data: any}) {
   return (
     <>
       <div className="w-full">
-        <PublicVideoItems />
+        <PublicVideoItems data={data}/>
       </div>
     </>
   );
