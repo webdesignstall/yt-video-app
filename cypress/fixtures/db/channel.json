@@ -967,5 +967,12 @@
     "description": "Id ex consequatur to",
     "price_per_month": "498",
     "option": "1"
+  },
+  {
+    "name": "New Channel",
+    "username": "newChannel",
+    "description": "description",
+    "price_per_month": "5",
+    "option": "1"
   }
 ]
