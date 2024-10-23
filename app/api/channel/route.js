@@ -7,8 +7,6 @@ import path from "path";
 export async function POST(req) {
     const {name, username, description, price_per_month, option } = await req.json();
 
-    console.log(name);
-
     // Simulate validation and processing of card details
     if (!name || !username || !description || !price_per_month || !option) {
         return NextResponse.json({ error: "All field are required" }, { status: 400 });

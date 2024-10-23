@@ -158,6 +158,7 @@ export default function TeamSwitcher({ className, channels, selectedTeam, setSel
                       setOpen(false);
                     }}
                     className="text-sm"
+
                   >
                     <Avatar className="mr-2 h-5 w-5">
                       <AvatarImage
@@ -167,7 +168,7 @@ export default function TeamSwitcher({ className, channels, selectedTeam, setSel
                       />
                       <AvatarFallback>SC</AvatarFallback>
                     </Avatar>
-                    {team?.name}
+                    <p data-cy={team?.username}> {team?.name}</p>
                     <CheckIcon
                       className={cn(
                         "ml-auto h-4 w-4",

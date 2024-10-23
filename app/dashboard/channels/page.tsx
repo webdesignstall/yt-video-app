@@ -1,10 +1,10 @@
 "use client"
-import { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
+// import { Metadata } from "next";
+// import Image from "next/image";
+// import Link from "next/link";
 
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+// import { cn } from "@/lib/utils";
+// import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Card,
@@ -35,6 +35,8 @@ export default function DashboardPage() {
 
   const [channels, setChannels] = useState([])
   const [selectedTeam, setSelectedTeam] = React.useState<any>({});
+
+
   const getChannels = async ()=> {
     const response = await fetch("/api/channel", {method: 'GET'});
     const {data} = await response.json();
