@@ -70,9 +70,10 @@ type TeamSwitcherProps = Omit<PopoverTriggerProps & React.RefAttributes<HTMLButt
   channels: string[]; // Assuming channels is an array of strings
   selectedTeam: any,
   setSelectedTeam: any,
+  getChannels: any
 };
 
-export default function TeamSwitcher({ className, channels, selectedTeam, setSelectedTeam,  ...props }: TeamSwitcherProps) {
+export default function TeamSwitcher({ className, channels, selectedTeam, setSelectedTeam,getChannels,  ...props }: TeamSwitcherProps) {
   const [open, setOpen] = React.useState(false);
   const [showNewTeamSheet, setShowNewTeamSheet] = React.useState(false);
 
@@ -106,6 +107,7 @@ export default function TeamSwitcher({ className, channels, selectedTeam, setSel
       console.log(result?.message);
       setSuccessMsg(result?.message)
       setShowNewTeamSheet(false)
+      await getChannels()
     }else {
       console.log(result?.error);
       setErrorMsg(result?.error)

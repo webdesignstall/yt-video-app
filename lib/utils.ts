@@ -49,6 +49,26 @@ export const storeData = async (newData, filename, fs, path) => {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+export const updateData = async (newData,username, filename, fs, path) => {
+  // Define the file path for the dummy database
+  const filePath = path.join(process.cwd(), 'cypress', 'fixtures', 'db', `${filename}.json`);
+
+  // Step 3: Write updated data back to the file
+  try {
+    fs.writeFileSync(filePath, JSON.stringify([], null, 2), 'utf-8');
+    fs.writeFileSync(filePath, JSON.stringify(newData, null, 2), 'utf-8');
+    console.log("Data written successfully.");
+    return { success: true };
+  } catch (error) {
+    console.error("Error writing to file:", error);
+    return { success: false, message: "Failed to store the data." };
+  }
+};
+
+
+
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

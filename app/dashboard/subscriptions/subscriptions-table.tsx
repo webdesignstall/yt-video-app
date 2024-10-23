@@ -24,13 +24,13 @@ import { taskSchema } from "./data/schema";
   return z.array(taskSchema).parse(tasks);
 }*/
 
-export default function SubscriptionsTable() {
+export default function SubscriptionsTable({data}: {data: any}) {
   // const tasks = await getTasks();
   const tasks: any = [];
 
   return (
     <>
-      <DataTable data={tasks} columns={columns} />
+      <DataTable data={data} columns={columns} />
     </>
   );
 }

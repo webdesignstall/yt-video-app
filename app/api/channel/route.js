@@ -1,11 +1,13 @@
 // app/api/payment/route.ts
 import { NextResponse } from "next/server";
-import {getData, storeData} from "../../../lib/utils";
+import {getData, storeData, updateData} from "../../../lib/utils";
 import fs from "fs";
 import path from "path";
 
 export async function POST(req) {
     const {name, username, description, price_per_month, option } = await req.json();
+
+    console.log(name);
 
     // Simulate validation and processing of card details
     if (!name || !username || !description || !price_per_month || !option) {
@@ -25,6 +27,49 @@ export async function POST(req) {
     if (result.success){
         // Simulate success response
         return NextResponse.json({ message: "Channel created successfully" }, { status: 201 });
+    }else {
+        return NextResponse.json({ error: result?.message }, { status: 200 });
+    }
+}
+
+export async function PUT(req) {
+    const {name, username, description, price_per_month, non_subscriber_access, avatar, header_background } = await req.json();
+
+
+    // Simulate validation and processing of card details
+    if (!name || !username || !description || !price_per_month || !non_subscriber_access) {
+        return NextResponse.json({ error: "All field are required" }, { status: 400 });
+    }
+
+    // Fetch the existing channel data
+    const channels = await getData('channel', fs, path);
+
+    // Find the index of the channel by username
+    const channelIndex = channels.findIndex(channel => channel.username === username);
+
+    // If the channel doesn't exist, return a 404 error
+    if (channelIndex === -1) {
+        return NextResponse.json({ error: "Channel not found" }, { status: 404 });
+    }
+
+    // Update the channel with new data
+    channels[channelIndex] = {
+        ...channels[channelIndex], // Keep existing values
+        name,                      // Update with new values
+        description,
+        price_per_month,
+        option: non_subscriber_access,
+        avatar,                    // Optional fields if provided
+        header_background
+    };
+
+    // console.log(channels)
+
+    const result = await updateData(channels,username, 'channel', fs, path);
+
+    if (result.success){
+        // Simulate success response
+        return NextResponse.json({ message: "Channel updated successfully" }, { status: 201 });
     }else {
         return NextResponse.json({ error: result?.message }, { status: 200 });
     }
