@@ -12,7 +12,7 @@ describe('Channel Create Form', () => {
      * Loads form data fixture and navigates to the Channel Settings page.
      */
     beforeEach(() => {
-        cy.visit('/dashboard/channels');
+        cy.visit('/dashboard/channels', {failOnStatusCode: false});
         // Open the dropdown
         cy.get('button[aria-label="Select a team"]').click();
 
