@@ -102,10 +102,6 @@ export function ProfileForm() {
           setApiResponseErrorMsg(result?.error)
       }
 
-      console.log({response})
-
-
-
     /*toast({
       title: "You submitted the following values:",
       description: (
