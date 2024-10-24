@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "List of your private videos and their status.",
 };
 
-const video_demo_json = [
+/*const video_demo_json = [
   {
     id: "1",
     filename: "Video 1",
@@ -28,20 +28,30 @@ const video_demo_json = [
       "https://images.unsplash.com/photo-1526779259212-939e64788e3c?q=80&w=3274",
     created: "2021-07-01T12:00:00",
   },
-];
+];*/
 
 export function VideosTable({ initialVideos }: { initialVideos: Task[] }) {
-  const [videos, setVideos] = useState([...video_demo_json, ...initialVideos]);
+  const [videos, setVideos] = useState<Task[]>([...initialVideos]);
 
+  // Fetch uploaded videos if needed
   useEffect(() => {
-    setVideos((prevVideos) => [...prevVideos, ...initialVideos]);
+    const fetchUploadedVideos = async () => {
+      const response = await fetch("/api/video-upload", {
+        method: "GET",
+      });
+      const data = await response.json();
+      setVideos(data.data); // Update state with fetched videos
+    };
+
+    fetchUploadedVideos();
   }, [initialVideos]);
 
+  // Validate videos against the schema
   const tasks = z.array(taskSchema).parse(videos);
 
   return (
-    <>
-      <DataTable data={tasks} columns={columns} />
-    </>
+      <>
+        <DataTable data={tasks} columns={columns} />
+      </>
   );
 }
