@@ -1,12 +1,12 @@
 // app/api/payment/route.ts
 import { NextResponse } from "next/server";
-import {getData, storeData, updateData} from "../../../lib/utils";
+import {getData,  updateData} from "../../../lib/utils";
 import fs from "fs";
 import path from "path";
 import moment from "moment";
 
 export async function POST(req) {
-    const {username, email, bio, urls } = await req.json();
+    const {username, email, bio, urls, id } = await req.json();
 
     // Simulate validation and processing of card details
     if (!username || !email || !bio) {
@@ -15,18 +15,18 @@ export async function POST(req) {
 
     const users = await getData('registration', fs, path);
 
-    const user = users.find(user => user.id === users[0].id);
+    const user = users.find(user => user.id === id);
 
 
     // Check if usernameChangeableAt is more than 30 days in the past
     const isUsernameChangeable = moment(user?.usernameChangeableAt * 1000).isBefore( moment().subtract(30, 'days'));
 
-    if (!isUsernameChangeable) {
+    if ( username.toLowerCase() !== user.username.toLowerCase() && !isUsernameChangeable) {
         return NextResponse.json({ error: "You can only change your username once every 30 days." }, { status: 400 });
     }
 
     // Find the index of the channel by username
-    const userIndex = users.findIndex(user => user.id === 1);
+    const userIndex = users.findIndex(user => user.id === id);
 
     // If the user doesn't exist, return a 404 error
     if (userIndex === -1) {
@@ -54,7 +54,7 @@ export async function POST(req) {
 
 
 export async function GET() {
-    const data = await getData('channel', fs, path)
+    const data = await getData('registration', fs, path)
 
-    return NextResponse.json({ data }, { status: 200 });
+    return NextResponse.json({ data: data[0] }, { status: 200 });
 }

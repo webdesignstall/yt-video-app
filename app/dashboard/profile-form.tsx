@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
+import {useEffect, useState} from "react";
 
 const profileFormSchema = z.object({
   username: z
@@ -41,7 +42,7 @@ const profileFormSchema = z.object({
       required_error: "Please select an email to display.",
     })
     .email(),
-  bio: z.string().max(160).min(4, 'Bio must be at least 4 characters.'),
+  bio: z.string().max(160).min(4, 'Bio must be at least 4 characters.').max(160),
   urls: z
     .array(
       z.object({
@@ -49,23 +50,27 @@ const profileFormSchema = z.object({
       })
     )
     .optional(),
+    id: z.string()
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-// This can come from your database or API.
+/*// This can come from your database or API.
 const defaultValues: Partial<ProfileFormValues> = {
   bio: "I own a computer.",
   urls: [
     { value: "https://shadcn.com" },
     { value: "http://twitter.com/shadcn" },
   ],
-}
+}*/
 
 export function ProfileForm() {
+
+    const [userProfile, setUserProfile] = useState()
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    // defaultValues: userProfile,
     mode: "onChange",
   })
 
@@ -74,10 +79,12 @@ export function ProfileForm() {
     control: form.control,
   })
 
+    const [apiResponseSuccessMsg, setApiResponseSuccessMsg] = useState()
+    const [apiResponseErrorMsg, setApiResponseErrorMsg] = useState()
+
+
+
   async function onSubmit(data: ProfileFormValues) {
-
-
-      console.log({data})
 
       const response = await fetch("/api/profile-update", {
           method: "POST",
@@ -89,9 +96,15 @@ export function ProfileForm() {
       const result = await response.json();
       if (response.ok) {
           console.log(result)
+          // @ts-ignore
+          setApiResponseSuccessMsg(result?.message)
+      }else {
+          setApiResponseErrorMsg(result?.error)
       }
 
-      console.log(result);
+      console.log({response})
+
+
 
     /*toast({
       title: "You submitted the following values:",
@@ -103,17 +116,59 @@ export function ProfileForm() {
     })*/
   }
 
+
+  const fetchUserProfile = async ()=> {
+      const response = await fetch("/api/profile-update",{
+          method: "GET"
+      });
+
+      const {data} = await response.json();
+      return data;
+  }
+
+    useEffect(() => {
+        (async ()=> {
+            const data = await fetchUserProfile();
+            form.setValue('username', data?.username)
+            form.setValue('email', data?.email)
+            form.setValue('bio', data?.bio)
+            form.setValue('urls', data?.urls)
+            form.setValue('id', data?.id)
+            setUserProfile(data)
+        })()
+    }, []);
+
   return (
     <Form {...form}>
+
+        {
+            apiResponseSuccessMsg && <p data-cy='apiResponseMsg' className='text-green-500'>{apiResponseSuccessMsg}</p>
+        }
+        {
+            apiResponseErrorMsg && <p data-cy='apiResponseMsg' className='text-red-500'>{apiResponseErrorMsg}</p>
+        }
+
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
+          control={form.control}
+          name="id"
+          render={({ field }) => (
+            <FormItem hidden>
+              <FormControl>
+                <Input hidden data-cy='id' {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+          <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input data-cy='username' placeholder="shadcn" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a
@@ -136,10 +191,8 @@ export function ProfileForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem role="option" value="invalid-email">invalid-email</SelectItem>
-                  <SelectItem role="option" value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem role="option" value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem role="option" value="m@support.com">m@support.com</SelectItem>
+                  {/*  @ts-ignore */}
+                  <SelectItem role="option" value={userProfile?.email}>{userProfile?.email}</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
@@ -158,6 +211,7 @@ export function ProfileForm() {
               <FormLabel>Bio</FormLabel>
               <FormControl>
                 <Textarea
+                  data-cy='bio'
                   placeholder="Tell us a little bit about yourself"
                   className="resize-none"
                   {...field}
@@ -178,7 +232,7 @@ export function ProfileForm() {
               key={field.id}
               name={`urls.${index}.value`}
               render={({ field }) => (
-                <FormItem>
+                <FormItem data-cy={`url-field`}>
                   <FormLabel className={cn(index !== 0 && "sr-only")}>
                     URLs
                   </FormLabel>
@@ -186,7 +240,7 @@ export function ProfileForm() {
                     Add links to your website, blog, or social media profiles.
                   </FormDescription>
                   <FormControl>
-                    <Input {...field} />
+                    <Input data-cy={`url`} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -194,6 +248,7 @@ export function ProfileForm() {
             />
           ))}
           <Button
+            data-cy='url-add-btn'
             type="button"
             variant="outline"
             size="sm"
