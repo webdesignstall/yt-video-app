@@ -74,16 +74,33 @@ export function ProfileForm() {
     control: form.control,
   })
 
-  function onSubmit(data: ProfileFormValues) {
+  async function onSubmit(data: ProfileFormValues) {
 
-    toast({
+
+      console.log({data})
+
+      const response = await fetch("/api/profile-update", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      if (response.ok) {
+          console.log(result)
+      }
+
+      console.log(result);
+
+    /*toast({
       title: "You submitted the following values:",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
-    })
+    })*/
   }
 
   return (
