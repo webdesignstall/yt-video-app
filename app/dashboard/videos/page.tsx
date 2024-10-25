@@ -23,8 +23,9 @@ function VideoUploader({ onUpload }: { onUpload: (_files: File[]) => void }) {
           className={`p-6 mt-4 mb-6 border-2 border-dashed rounded-lg text-center cursor-pointer ${
               isDragActive ? "border-blue-500 bg-blue-50" : "border-gray-300"
           }`}
+          data-cy="upload-wrap"
       >
-        <input {...getInputProps()} />
+        <input data-cy="video-input" {...getInputProps()} />
         {isDragActive ? (
             <div className="space-y-4">
               <UploadIcon className="w-12 h-12 mx-auto text-blue-500" />
@@ -117,6 +118,8 @@ export default function SettingsVideosPage() {
   return (
       <div className="space-y-6 w-full">
         <div>
+          {apiResponseSuccessMsg && <p data-cy='api-res-msg' className='text-green-500'>{apiResponseSuccessMsg}</p>}
+          {apiResponseErrorMsg && <p data-cy='api-res-msg' className='text-red-500'>{apiResponseErrorMsg}</p>}
           <h3 className="text-lg font-medium">Videos</h3>
           <p className="text-sm text-muted-foreground">
             Upload and manage private videos.

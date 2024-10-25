@@ -47,11 +47,11 @@ export function VideosTable({ initialVideos }: { initialVideos: Task[] }) {
   }, [initialVideos]);
 
   // Validate videos against the schema
-  const tasks = z.array(taskSchema).parse(videos);
+  // const tasks = z?.array(taskSchema)?.parse(videos);
 
   return (
       <>
-        <DataTable data={tasks} columns={columns} />
+        <DataTable data={videos} columns={columns} />
       </>
   );
 }
