@@ -51,7 +51,7 @@ export const storeData = async (newData, filename, fs, path) => {
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-export const updateData = async (newData,username, filename, fs, path) => {
+export const updateData = async (newData, filename, fs, path) => {
   // Define the file path for the dummy database
   const filePath = path.join(process.cwd(), 'cypress', 'fixtures', 'db', `${filename}.json`);
 

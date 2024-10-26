@@ -1,8 +1,19 @@
+"use client"
 import { Separator } from "@/components/ui/separator";
 import  SubscriptionsTable  from "@/app/dashboard/subscriptions/subscriptions-table";
+import {useEffect, useState} from "react";
 
 export default function SettingsSubscriptionsPage() {
 
+  const [subscriptions, setSubscriptions] = useState<any>([])
+
+  useEffect(() => {
+    (async ()=> {
+      const response = await fetch("/api/subscriptions");
+      const data = await response.json();
+      setSubscriptions(data);
+    })()
+  }, []);
 
     return (
     <div className="space-y-6 w-full">
@@ -14,7 +25,7 @@ export default function SettingsSubscriptionsPage() {
       </div>
       <Separator />
       <div className="w-full">
-        <SubscriptionsTable data={[]} />
+        <SubscriptionsTable data={subscriptions} />
       </div>
     </div>
   );
