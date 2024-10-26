@@ -86,6 +86,13 @@
               "avatar": "/avatars/03.png"
             },
             "content": "Mind giving me the skinny on the 'Zig on the client' part? Are you somehow transforming Zig to JS, or to whatever JS is being transformed(compiled/interpreted, whatever) when Firefox is executing that?..."
+          },
+          {
+            "author": {
+              "name": "@jony.ahmed",
+              "avatar": "../../../cypress/fixtures/images/slide2.png"
+            },
+            "content": "666"
           }
         ]
       },
