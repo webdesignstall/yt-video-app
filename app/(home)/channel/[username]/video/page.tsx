@@ -25,6 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AlbumArtwork } from "@/app/(home)/components/album-artwork";
 import { madeForYouAlbums } from "@/app/(home)/data/albums";
 import {useParams, useSearchParams} from "next/navigation";
+import {Textarea} from "@/components/ui/textarea";
 
 export default function BrowsePage() {
   const [pricePerMonth, setPricePerMonth] = React.useState(0);
@@ -276,46 +277,47 @@ export default function BrowsePage() {
                 </div>
               </CardContent>
             </Card>
-            <Card x-chunk="watch-video-more-from-this-channel">
+            <Card data-cy='comment-card' x-chunk="watch-video-more-from-this-channel">
               <CardHeader>
                 <CardTitle>Comments</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-8">
                 <div className="flex items-start gap-4">
                   <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                    <AvatarImage src="/avatars/01.png" alt="Avatar"/>
                     <AvatarFallback>SC</AvatarFallback>
                   </Avatar>
-                  <form onSubmit={handleComment}>
+                  <form data-cy='comment-form' onSubmit={handleComment}>
                     <div className="flex items-start justify-start w-full space-x-4">
-                      <Input
+                      <Textarea
                           data-cy='comment-input'
                           id="comment"
-                          type="text"
                           placeholder="Add a comment"
-                      />
+                      ></Textarea>
                       <Button type='submit'>Post</Button>
                     </div>
                   </form>
 
                 </div>
                 <Separator/>
-                {
-                  video?.comments?.map((comment: any, index: any) => (
-                      <div key={index} className="flex items-start gap-4">
-                        <Avatar className="hidden h-9 w-9 sm:flex">
-                        <AvatarImage src={comment?.author?.avatar} alt="Avatar"/>
-                        <AvatarFallback>OM</AvatarFallback>
-                      </Avatar>
-                      <div className="grid gap-2">
-                        <p className="text-sm font-medium leading-none">
-                          {comment?.author?.name}
-                        </p>
-                        <p className="text-sm">{comment?.content}</p>
-                      </div>
-                    </div>
-                  ))
-                }
+                <div data-cy='comments-section'>
+                  {
+                    video?.comments?.map((comment: any, index: any) => (
+                        <div key={index} className="flex items-start gap-4">
+                          <Avatar className="hidden h-9 w-9 sm:flex">
+                            <AvatarImage src={comment?.author?.avatar} alt="Avatar"/>
+                            <AvatarFallback>OM</AvatarFallback>
+                          </Avatar>
+                          <div className="grid gap-2">
+                            <p className="text-sm font-medium leading-none">
+                              {comment?.author?.name}
+                            </p>
+                            <p data-cy='content' className="text-sm">{comment?.content}</p>
+                          </div>
+                        </div>
+                    ))
+                  }
+                </div>
 
 
               </CardContent>
