@@ -101,6 +101,7 @@ export default function ChannelPage() {
             <Card x-chunk="watch-video-descriptions">
               <CardHeader className="p-0">
                 <Image
+                  data-cy='channel_header'
                   src={`data:image/png;base64,${channel?.header_background}`}
                   alt="channel_header"
                   width={3000}
@@ -114,6 +115,7 @@ export default function ChannelPage() {
                     <div className="flex items-center justify-start space-x-4">
                       <Avatar className="mr-2 h-40 w-40">
                         <AvatarImage
+                         data-cy='avatar-image'
                           src={`https://images.unsplash.com/photo-1526779259212-939e64788e3c?q=80&w=3274`}
                           alt="test"
                           className="grayscale"
@@ -121,12 +123,14 @@ export default function ChannelPage() {
                         <AvatarFallback>SC</AvatarFallback>
                       </Avatar>
                       <div className="space-y-2">
-                        <h1 className="text-4xl font-semibold">
+                        <h1 data-cy='channel-name' className="text-4xl font-semibold">
                           {channel?.name}
                         </h1>
                         <div className="text-gray-500 font-medium space-y-2">
-                          <p>@{channel?.username} ‧ {channel?.subscribers?.length} subscribers ‧ {channel?.publicVideos?.length} videos</p>
-                          <p>{channel?.description}</p>
+                          <p><span data-cy='username'>@{channel?.username} </span> ‧ <span
+                              data-cy='subscribers'>{channel?.subscribers?.length}</span> subscribers ‧<span
+                              data-cy='videos'> {channel?.publicVideos?.length}</span> videos</p>
+                          <p data-cy='description'>{channel?.description}</p>
                         </div>
                         <Dialog open={subscribed} onOpenChange={handleDialogOpenChange}>
                           <DialogTrigger asChild>
@@ -215,6 +219,7 @@ export default function ChannelPage() {
                     <div className="grid grid-cols-4 gap-8">
                       {channel?.publicVideos?.map((album: any) => (
                         <AlbumArtwork
+                          data-cy='videos-list'
                           username={channel?.username}
                           key={album?.id}
                           album={album}
