@@ -135,13 +135,13 @@ export default function ChannelPage() {
                                   <BellIcon className="mr-2 h-5 w-5" /> Subscribed
                                 </Button>
                             ) : (
-                                <Button onClick={() => setSubscribed(true)}>
+                                <Button data-cy='subscribe-btn' onClick={() => setSubscribed(true)}>
                                   <BellIcon  className="mr-2 h-5 w-5" /> Subscribe
                                 </Button>
                             )}
                           </DialogTrigger>
                           <DialogContent className="sm:max-w-lg">
-                            <form onSubmit={handleSubscribe}>
+                            <form data-cy='subscribe-submit' onSubmit={handleSubscribe}>
 
                               <DialogHeader className="mb-4">
                                 <DialogTitle>Subscribe Channel</DialogTitle>
@@ -156,6 +156,7 @@ export default function ChannelPage() {
                                 <div className="grid gap-3">
                                   <Label htmlFor="number_of_month">Month</Label>
                                   <Input
+                                      data-cy='number_of_month'
                                       name='number_of_month'
                                       id="number_of_month"
                                       type="number"
@@ -173,7 +174,7 @@ export default function ChannelPage() {
                                       Renew your subscription automatically.
                                     </p>
                                   </div>
-                                  <Switch name='auto_renew' checked={autoRenew}
+                                  <Switch data-cy='auto_renew' name='auto_renew' checked={autoRenew}
                                           onCheckedChange={setAutoRenew}/>
                                 </div>
                               </div>

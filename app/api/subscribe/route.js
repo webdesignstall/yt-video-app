@@ -7,7 +7,7 @@ export async function POST(req) {
     const { number_of_month, autoRenew, subscribe_for, username, channelId } = await req.json();
 
     // Validate inputs
-    if (!number_of_month ||  !subscribe_for || !username || !channelId) {
+    if (!number_of_month) {
         return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
 
