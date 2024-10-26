@@ -1,54 +1,10 @@
-/*
 /// <reference types="cypress" />
 
-/!**
- * @module ExploreChannelTests
+/**
+ * @module ExplorePageTests
  * @description Test suite for exploring a channel and subscription functionality.
- *!/
-describe('Explore channel', () => {
-
-    /!**
-     * @function setupChannelPage
-     * @description Sets up the channel page by intercepting API requests and visiting the channel URL.
-     *!/
-    beforeEach(() => {
-        cy.intercept('GET', '/api/explore-subscribed').as('exploreChannel');
-        cy.intercept('GET', '/api/subscribe').as('subscribedChannel');
-        cy.visit(`/explore`);
-    });
-
-    /!**
-     * @function
-     * @description
-     *!/
-    it('Should work explore tap', () => {
-        cy.wait('@exploreChannel');
-        cy.wait('@subscribedChannel');
-
-        cy.get("[data-cy='subscribed']").click();
-        cy.get("[data-cy='explore']").click();
-    });
-
-    /!**
-     * @function
-     * @description
-     *!/
-    it('Should display explore channel ', () => {
-        cy.wait('@exploreChannel');
-        cy.wait('@subscribedChannel');
-
-        cy.get("[data-cy='subscribed']").click();
-        cy.get("[data-cy='explore']").click();
-    });
-
-});
-*/
-
-
-/// <reference types="cypress" />
-
+ */
 describe('Explore Page E2E Tests', () => {
-
     beforeEach(() => {
         cy.intercept('GET', '/api/explore-subscribed').as('exploreChannel');
         cy.intercept('GET', '/api/subscribe').as('subscribedChannel');
@@ -56,23 +12,23 @@ describe('Explore Page E2E Tests', () => {
     });
 
     /**
-     * Test to verify that the Explore page loads successfully
+     * Test to verify that the Explore page loads successfully.
+     * @function shouldLoadExplorePage
      */
     it('should load the Explore page', () => {
-        // Visit the Explore page
-        cy.visit('/explore');
-
         // Check that the Explore tab and Subscribed tab are visible
         cy.get("[data-cy='explore']").should('be.visible');
         cy.get("[data-cy='subscribed']").should('be.visible');
     });
 
     /**
-     * Test to verify that the Explore tab displays channel data
+     * Test to verify that the Explore tab displays channel data.
+     * @function shouldDisplayChannelsInExploreTab
      */
     it('should display channels in Explore tab', () => {
-        cy.wait('@exploreChannel')
-        cy.wait('@subscribedChannel')
+        cy.wait('@exploreChannel');
+        cy.wait('@subscribedChannel');
+
         // Click on the Explore tab
         cy.get("[data-cy='explore']").click();
 
@@ -81,7 +37,8 @@ describe('Explore Page E2E Tests', () => {
     });
 
     /**
-     * Test to verify the Subscribed tab shows subscribed channels
+     * Test to verify the Subscribed tab shows subscribed channels.
+     * @function shouldDisplaySubscribedChannelsInSubscribedTab
      */
     it('should display subscribed channels in Subscribed tab', () => {
         // Click on the Subscribed tab
@@ -102,9 +59,9 @@ describe('Explore Page E2E Tests', () => {
         });
     });
 
-
     /**
-     * Test to verify channel card elements and data in the Explore tab
+     * Test to verify channel card elements and data in the Explore tab.
+     * @function shouldDisplayChannelCardDetailsInExploreTab
      */
     it('should display channel card details correctly in Explore tab', () => {
         // Click on the Explore tab
@@ -128,7 +85,8 @@ describe('Explore Page E2E Tests', () => {
     });
 
     /**
-     * Test to verify channel card elements and data in the Subscribed tab
+     * Test to verify channel card elements and data in the Subscribed tab.
+     * @function shouldDisplayChannelCardDetailsInSubscribedTab
      */
     it('should display channel card details correctly in Subscribed tab', () => {
         // Click on the Subscribed tab
@@ -152,7 +110,8 @@ describe('Explore Page E2E Tests', () => {
     });
 
     /**
-     * Test for subscribing/unsubscribing to a channel
+     * Test for subscribing/unsubscribing to a channel.
+     * @function shouldAllowSubscribingUnsubscribingToChannel
      */
     it('should allow subscribing/unsubscribing to a channel', () => {
         cy.get("[data-cy='explore']").click();
@@ -166,4 +125,3 @@ describe('Explore Page E2E Tests', () => {
         });
     });
 });
-

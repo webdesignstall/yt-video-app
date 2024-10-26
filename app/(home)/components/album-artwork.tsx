@@ -23,6 +23,7 @@ export function AlbumArtwork({
 }: AlbumArtworkProps) {
   return (
     <Link
+      data-cy='video-link'
       key={album.id}
       href={`/channel/${username}/video?id=${album?.id}`}
       className={
@@ -32,6 +33,7 @@ export function AlbumArtwork({
       <div className={cn("space-y-3", className)} {...props}>
         <div className="overflow-hidden rounded-md">
           <Image
+            data-cy='video-thumbnail'
             src={album?.cover}
             alt={album?.name}
             width={width}
@@ -44,9 +46,9 @@ export function AlbumArtwork({
           />
         </div>
         <div className="space-y-1 text-sm">
-          <h3 className="font-medium leading-none">{album?.name}</h3>
+          <h3 data-cy='video-title' className="font-medium leading-none">{album?.name}</h3>
           <p className="text-xs text-muted-foreground">
-            {album?.views} • {album?.created_at}
+            <span data-cy='video-views'>{album?.views}</span> • <span data-cy='video-uploaded-date'> {album?.created_at} </span>
           </p>
         </div>
       </div>
