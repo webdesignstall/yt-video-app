@@ -24,8 +24,8 @@ export default function FeedPage() {
       <div className="h-full px-4 py-6 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-2xl font-semibold tracking-tight">Latest</h2>
-            <p className="text-sm text-muted-foreground">
+            <h2 data-cy='latest' className="text-2xl font-semibold tracking-tight">Latest</h2>
+            <p data-cy='latest-desc' className="text-sm text-muted-foreground">
               Stay up to date with your followed channels.
             </p>
           </div>
@@ -33,9 +33,10 @@ export default function FeedPage() {
         <Separator className="my-4" />
         <div className="relative">
           <ScrollArea>
-            <div className="grid grid-cols-4 gap-8">
+            <div data-cy='latest-videos' className="grid grid-cols-4 gap-8">
               {videos?.latest?.videos?.map((album: any) => (
                 <AlbumArtwork
+                  data-cy='latest-video'
                   username={videos?.latest?.username}
                   key={album.name}
                   album={album}
@@ -50,19 +51,20 @@ export default function FeedPage() {
           </ScrollArea>
         </div>
         <div className="mt-6 space-y-1">
-          <h2 className="text-2xl font-semibold tracking-tight">
+          <h2 data-cy='make-for-you' className="text-2xl font-semibold tracking-tight">
             Made for You
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p data-cy='make-for-you-desc' className="text-sm text-muted-foreground">
             Top picks for you. Updated daily.
           </p>
         </div>
         <Separator className="my-4" />
         <div className="relative">
           <ScrollArea>
-            <div className="grid grid-cols-4 gap-8">
+            <div data-cy='make-for-you-videos' className="grid grid-cols-4 gap-8">
               {videos?.forYou?.videos?.map((album: any) => (
                 <AlbumArtwork
+                    data-cy='make-for-you-video'
                   username={videos?.forYou?.username}
                   key={album.name}
                   album={album}
