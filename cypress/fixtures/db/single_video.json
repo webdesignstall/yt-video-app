@@ -1,0 +1,40 @@
+{
+
+      "src": "https://www.youtube.com/embed/40AYjP0_xdE",
+      "likeCount": "6.2k",
+      "liked": false,
+      "description": "Welcome to my guitar tutorial. This video is designed for anyone who's picking up the guitar for the first time or want to solidify their foundational skills.",
+      "channel": {
+        "title": "Listen Now",
+        "views": "12.6k views",
+        "author": {
+          "name": "Learn Guitar Now",
+          "subscribers": "79.6k subscribers",
+          "avatar": "https://source.unsplash.com/100x100/?face",
+          "subscribed": false
+        }
+      },
+      "comments": [
+        {
+          "author": {
+            "name": "@olivia.martin",
+            "avatar": "/avatars/01.png"
+          },
+          "content": "what’s up what’s up"
+        },
+        {
+          "author": {
+            "name": "@jacksonlee",
+            "avatar": "/avatars/02.png"
+          },
+          "content": "Love your video's but I have stopped watching them because the constant moving maze above your head really triggers my Asperger and ADHD to a point where I can't follow along or I have to concentrate so hard that I tire out on these long videos. I wonder if you would consider removing it?"
+        },
+        {
+          "author": {
+            "name": "@isabellanguyen",
+            "avatar": "/avatars/03.png"
+          },
+          "content": "Mind giving me the skinny on the 'Zig on the client' part? Are you somehow transforming Zig to JS, or to whatever JS is being transformed(compiled/interpreted, whatever) when Firefox is executing that?..."
+        }
+      ]
+}
