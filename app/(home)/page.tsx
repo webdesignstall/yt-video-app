@@ -1,10 +1,25 @@
+"use client"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
 import { AlbumArtwork } from "./components/album-artwork";
 import { madeForYouAlbums } from "./data/albums";
+import {useEffect, useState} from "react";
 
 export default function FeedPage() {
+
+  const [videos, setVideos] = useState<any>()
+
+  useEffect(() => {
+    (async ()=> {
+      const res = await fetch('/api/public-videos', {method: 'GET'});
+      const data = await res.json();
+      setVideos(data)
+
+    })()
+  }, []);
+
+  
   return (
     <>
       <div className="h-full px-4 py-6 lg:px-8">
@@ -20,8 +35,9 @@ export default function FeedPage() {
         <div className="relative">
           <ScrollArea>
             <div className="grid grid-cols-4 gap-8">
-              {madeForYouAlbums.map((album) => (
+              {videos?.latest?.videos?.map((album: any) => (
                 <AlbumArtwork
+                  username={videos?.latest?.username}
                   key={album.name}
                   album={album}
                   className="w-full"
@@ -46,8 +62,9 @@ export default function FeedPage() {
         <div className="relative">
           <ScrollArea>
             <div className="grid grid-cols-4 gap-8">
-              {madeForYouAlbums.concat(madeForYouAlbums).map((album) => (
+              {videos?.forYou?.videos?.map((album: any) => (
                 <AlbumArtwork
+                  username={videos?.forYou?.username}
                   key={album.name}
                   album={album}
                   className="w-full"
