@@ -3,7 +3,6 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
 import { AlbumArtwork } from "./components/album-artwork";
-import { madeForYouAlbums } from "./data/albums";
 import {useEffect, useState} from "react";
 
 export default function FeedPage() {

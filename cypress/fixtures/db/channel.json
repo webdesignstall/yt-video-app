@@ -52,6 +52,13 @@
               "avatar": "../../../cypress/fixtures/images/slide2.png"
             },
             "content": "Helpful content"
+          },
+          {
+            "author": {
+              "name": "@jony.ahmed",
+              "avatar": "../../../cypress/fixtures/images/slide2.png"
+            },
+            "content": "555"
           }
         ]
       },
