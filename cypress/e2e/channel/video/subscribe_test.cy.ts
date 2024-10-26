@@ -9,7 +9,7 @@ describe('Single Video Page Channel Subscribe Test', () => {
      */
     beforeEach(() => {
         cy.intercept('GET', '/api/channel/kizuqyhe').as('getVideo');
-        cy.visit(`/channel/kizuqyhe`);
+        cy.visit(`/channel/kizuqyhe/video?id=PV-8782`);
     });
 
     /**
