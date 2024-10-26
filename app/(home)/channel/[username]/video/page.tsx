@@ -156,7 +156,7 @@ export default function BrowsePage() {
             <Card x-chunk="watch-video-descriptions">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>{channel?.name}</CardTitle>
+                  <CardTitle data-cy='channel-title'>{channel?.name}</CardTitle>
                   <h1 className="text-gray-500 font-medium">{video?.views}</h1>
                 </div>
               </CardHeader>
@@ -174,7 +174,7 @@ export default function BrowsePage() {
                       </Avatar>
                       <div>
                         <h1>{channel?.name}</h1>
-                        <p className="text-gray-500 text-sm">
+                        <p data-cy='channel-subscribe' className="text-gray-500 text-sm">
                           {channel?.subscribers?.length} subscribers
                         </p>
                       </div>
@@ -252,14 +252,15 @@ export default function BrowsePage() {
                     </div>
                     <div className="flex items-center justify-start">
                       <Button
+                          data-cy='like-btn'
                           variant="ghost"
                           onClick={handleLikeToggle}
                           className="p-2"
                       >
                         {liked ? (
-                            <HeartIcon className="h-6 w-6" />
+                            <HeartIcon data-cy='heart-icon' className="h-6 w-6" />
                         ) : (
-                          <HeartFilledIcon className="h-6 w-6" />
+                          <HeartFilledIcon data-cy='heart-filled-icon' className="h-6 w-6" />
                         )}
                       </Button>
                       <h1 className="text-gray-500 font-medium ml-2">
@@ -329,13 +330,13 @@ export default function BrowsePage() {
               <CardContent>
                 <div className="relative">
                   <ScrollArea>
-                    <div className="grid grid-cols-4 gap-8">
+                    <div data-cy="more-from-channel" className="grid grid-cols-4 gap-8">
                       {channel?.publicVideos?.map((album: any) => (
                           <AlbumArtwork
                               username={channel?.username}
                               key={album?.id}
                               album={album}
-                              className="w-full"
+                              className="w-full album-artwork"
                               aspectRatio="video"
                               width={150}
                               height={150}
