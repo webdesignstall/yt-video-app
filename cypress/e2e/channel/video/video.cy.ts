@@ -1,10 +1,16 @@
 // channelPage.cy.js
 
 /**
- * Channel Page Tests
- * @module ChannelPageTests
+ * @fileoverview Cypress E2E tests for the Video Page, covering video rendering, channel information display,
+ * interactions with like buttons, comments, and additional video sections.
+ * @module VideoPageTests
  */
+
 describe("Channel Page Tests", () => {
+    /**
+     * Runs before each test, intercepting the API call to the channel's endpoint and visiting the channel's video page.
+     * @function beforeEach
+     */
     beforeEach(() => {
         cy.intercept('GET', '/api/channel/wefozy').as('getChannel');
         // Replace 'wefozy' with a valid channel username for testing
@@ -12,52 +18,67 @@ describe("Channel Page Tests", () => {
         cy.wait("@getChannel"); // Wait for the request to complete
     });
 
+    /**
+     * Checks if the video player is rendered and visible on the page.
+     * @name shouldRenderVideoPlayer
+     * @function
+     */
     it('should render the video player', () => {
-        // Check if the video iframe is visible
         cy.get('iframe').should('be.visible');
     });
 
-
-
+    /**
+     * Verifies the display of channel-specific information like the title and subscribe button.
+     * @name shouldDisplayChannelInfo
+     * @function
+     */
     it('should display channel information', () => {
-        // Check if the channel name is displayed
         cy.get("[data-cy='channel-title']").should('be.visible');
         cy.get("[data-cy='channel-subscribe']").should('be.visible');
     });
 
+    /**
+     * Tests the functionality of the like button by toggling its state and checking for the visible icons.
+     * @name shouldRenderLikeButton
+     * @function
+     */
     it('should render the like button', () => {
-        // Click the like button and verify the like state changes
         cy.get("[data-cy='like-btn']").click();
         cy.get("[data-cy='heart-icon']").should('be.visible');
         cy.get("[data-cy='like-btn']").click();
         cy.get("[data-cy='heart-filled-icon']").should('be.visible');
     });
 
+    /**
+     * Ensures the comments section is present and contains one or more comments.
+     * @name shouldDisplayCommentsSection
+     * @function
+     */
     it('should display comments section', () => {
-        // Check if the comments section is rendered
         cy.get('[data-cy="comments-section"]').should('be.visible');
-
-        // Verify that comments are displayed
         cy.get('[data-cy="comments-section"]')
             .children()
             .should('have.length.greaterThan', 0);
     });
 
+    /**
+     * Verifies that individual comments include both content and author information.
+     * @name shouldDisplayIndividualCommentsWithAuthorInfo
+     * @function
+     */
     it('should display individual comments with author info', () => {
-        // Check if comment content and author name are displayed
         cy.get('[data-cy="content"]').first().should('be.visible');
         cy.get('.text-sm.font-medium.leading-none').first().should('be.visible');
     });
 
+    /**
+     * Checks if the "More from this channel" section displays additional videos, and verifies the click navigation on these videos.
+     * @name displaysMoreVideosFromThisChannel
+     * @function
+     */
     it('displays more videos from this channel', () => {
-        // Check if the "More from this channel" section is present
         cy.get('[data-cy="more-from-channel"]').should('be.visible');
-
-        // Check if there are videos listed
         cy.get('[data-cy="more-from-channel"] .album-artwork').should('have.length.greaterThan', 0);
-
-        // Check that clicking on one of the videos redirects to the correct page
         cy.get('[data-cy="more-from-channel"] .album-artwork').first().click();
     });
-
 });
