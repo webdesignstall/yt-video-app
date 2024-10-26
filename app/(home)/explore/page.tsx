@@ -47,16 +47,17 @@ export default function ExplorePage() {
         <Tabs defaultValue="explore" className="h-full space-y-6">
           <div className="space-between flex items-center">
             <TabsList>
-              <TabsTrigger value="explore" className="relative">
+              <TabsTrigger data-cy='explore' value="explore" className="relative">
                 Explore
               </TabsTrigger>
-              <TabsTrigger value="subscribed">Subscribed</TabsTrigger>
+              <TabsTrigger data-cy='subscribed' value="subscribed">Subscribed</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="explore" className="border-none p-0 outline-none">
             <div className="space-y-4">
               {exploreChannel?.map((channel:any) => (
                 <ChannelCard
+                  data-cy='channel-card'
                   key={channel?.username}
                   channel={channel}
                   className="w-full"
@@ -71,6 +72,7 @@ export default function ExplorePage() {
             <div className="space-y-4">
               {subscribedChannel.map((channel: any) => (
                 <ChannelCard
+                  data-cy='channel-card'
                   key={channel.id}
                   channel={channel}
                   className="w-full"
