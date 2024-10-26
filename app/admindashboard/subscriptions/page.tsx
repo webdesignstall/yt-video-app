@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { SubscriptionsTable } from "@/app/dashboard/subscriptions/subscriptions-table";
+import SubscriptionsTable  from "@/app/dashboard/subscriptions/subscriptions-table";
 
 export default function SettingsSubscriptionsPage() {
   return (
@@ -12,7 +12,7 @@ export default function SettingsSubscriptionsPage() {
       </div>
       <Separator />
       <div className="w-full">
-        <SubscriptionsTable />
+        <SubscriptionsTable data={[]}/>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-// channelPage.cy.js
+/// < reference type="cypress" />
 
 /**
  * @fileoverview Cypress E2E tests for the Video Page, covering video rendering, channel information display,
