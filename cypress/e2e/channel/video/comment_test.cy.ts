@@ -40,7 +40,7 @@ describe('Video Comment Tests', () => {
 
         // Wait for the comment to be submitted and page to update
         cy.wait('@getVideo');
-        cy.get("[data-cy='content']").last().should('have.text',content);
+        cy.get("[data-cy='content']").first().should('have.text',content);
     });
 
 
@@ -55,5 +55,54 @@ describe('Video Comment Tests', () => {
         // Verify that there's at least one comment in the section
         cy.get("[data-cy='content']").its('length').should('be.gte', 1);
     });
+
+
+    /**
+     * @function submitMultipleComments
+     * @description Adds multiple comments and verifies that they appear in the correct order in the comments section.
+     */
+    it('Should submit multiple comments and verify their order in the comments section', () => {
+        cy.wait('@getVideo');
+
+        // Define an array of comments to be added
+        const comments = [
+            'First comment',
+            'Second comment',
+            'Third comment'
+        ];
+
+        // Get the initial count of existing comments
+        cy.get("[data-cy='content']").then(commentElements => {
+            const initialCount = commentElements.length;
+
+            // Loop through each comment, submit it, and wait for the DOM to update
+            comments.forEach(comment => {
+                cy.get("[data-cy='comment-input']").clear().type(comment);
+                cy.get("[data-cy='comment-form']").submit();
+
+                // Wait to ensure each comment submission completes before the next
+                cy.wait('@getVideo');
+            });
+
+            // Calculate expected total count after submitting new comments
+            const expectedTotalCount = initialCount + comments.length;
+
+            // Verify the order of comments in the comments section
+            cy.get("[data-cy='content']").should('have.length', expectedTotalCount).then(commentElements => {
+                // Use a separate reversed array for the assertions
+                const reversedComments = [...comments].reverse();
+
+                // Check that each comment appears in reverse order (assuming latest comment is displayed at the top)
+                reversedComments.forEach((comment, index) => {
+                    cy.wrap(commentElements[index]).should('contain.text', comment);
+                });
+            });
+        });
+    });
+
+
+
+
+
 
 });
