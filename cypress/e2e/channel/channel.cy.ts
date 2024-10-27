@@ -17,7 +17,9 @@ describe("Channel Page Tests", () => {
      * @function shouldDisplayChannelHeaderBackgroundImage
      */
     it("should display the channel header background image", () => {
-        cy.get("[data-cy='channel_header']").should("be.visible");
+
+        cy.get("[data-cy='channel_header']").should("have.attr", 'src');
+
     });
 
     /**
@@ -33,10 +35,15 @@ describe("Channel Page Tests", () => {
      * @function shouldDisplayChannelDetails
      */
     it("should display the channel name, username, description, subscribers, and videos", () => {
-        cy.get("[data-cy='channel-name']").should("be.visible");
-        cy.get("[data-cy='description']").should("be.visible");
-        cy.get("[data-cy='subscribers']").should("be.visible");
-        cy.get("[data-cy='videos']").should("be.visible");
+        cy.fixture('db/channel').then((channel: any) => {
+            const wefozyChannel = channel[0];
+            cy.get("[data-cy='channel-name']").should("have.text", wefozyChannel.name);
+            cy.get("[data-cy='description']").should("have.text", wefozyChannel.description);
+            // Assuming subscribers is an array of individual subscriber elements, check the count
+            cy.get("[data-cy='subscribers']").should('have.text', wefozyChannel?.subscribers?.length);
+            cy.get("[data-cy='videos']").should("be.visible", wefozyChannel?.publicVideos?.length);
+        });
+
     });
 
     /**
