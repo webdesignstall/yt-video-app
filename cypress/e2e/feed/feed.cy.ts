@@ -34,12 +34,69 @@ describe('FeedPage E2E Test', () => {
         });
     });
 
+
+    /**
+     * Verifies that the "Latest" section loads with correct title, description, video items,
+     * and that videos are displayed in the correct order.
+     * @name loadsAndDisplaysLatestSectionInOrder
+     * @function
+     */
+    it('should loads and displays the latest section with videos in descending order', () => {
+        cy.wait('@fetchVideos');
+
+        cy.get("[data-cy='latest']").contains('Latest').should('be.visible');
+        cy.get("[data-cy='latest-desc']").contains('Stay up to date with your followed channels.').should('be.visible');
+
+        cy.fixture('db/channel').then((channel) => {
+            const latestVideos =  [...channel[0].publicVideos].reverse();
+
+
+
+            // Assert each video item in the correct order
+            cy.get("[data-cy='latest-videos']").within(() => {
+                latestVideos.forEach((video, index) => {
+                    cy.get("[data-cy='latest-video']").eq(index).within(() => {
+                        cy.contains(video.name).should('be.visible');
+                    });
+                });
+            });
+        });
+    });
+
+    /**
+     * Verifies that the "For You" section loads with correct title,
+     * and that videos are displayed in the correct order.
+     * @name loadsAndDisplaysForYouSectionInOrder
+     * @function
+     */
+    it('should loads and displays the for you section with videos in descending order', () => {
+        cy.wait('@fetchVideos');
+
+        cy.get("[data-cy='latest']").contains('Latest').should('be.visible');
+        cy.get("[data-cy='latest-desc']").contains('Stay up to date with your followed channels.').should('be.visible');
+
+        cy.fixture('db/channel').then((channel) => {
+            const forYouVideos =  [...channel[1].publicVideos].reverse();
+
+
+
+            // Assert each video item in the correct order
+            cy.get("[data-cy='latest-videos']").within(() => {
+                forYouVideos.forEach((video, index) => {
+                    cy.get("[data-cy='latest-video']").eq(index).within(() => {
+                        cy.contains(video.name).should('be.visible');
+                    });
+                });
+            });
+        });
+    });
+
     /**
      * Verifies that the "Made for You" section loads with the correct title, description, and video items.
      * @name loadsAndDisplaysMadeForYouSection
      * @function
      */
-    it('loads and displays the made-for-you section', () => {
+    it('should loads and displays the made-for-you section', () => {
         cy.wait('@fetchVideos');
 
         cy.get("[data-cy='make-for-you']").contains('Made for You').should('be.visible');
@@ -63,7 +120,7 @@ describe('FeedPage E2E Test', () => {
             cy.get("[data-cy='latest-video']").first().click();
         });
 
-        cy.url().should('include', '/channel/wefozy/video?id=PV-8782'); // Adjust this path based on your routing
+        cy.url().should('include', '/channel/wefozy/video?id=PV-7879'); // Adjust this path based on your routing
         cy.get('iframe').should('be.visible');
     });
 });

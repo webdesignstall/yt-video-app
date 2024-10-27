@@ -34,7 +34,7 @@ export default function FeedPage() {
         <div className="relative">
           <ScrollArea>
             <div data-cy='latest-videos' className="grid grid-cols-4 gap-8">
-              {videos?.latest?.videos?.map((album: any) => (
+              {videos?.latest?.videos?.slice()?.reverse()?.map((album: any) => (
                 <AlbumArtwork
                   data-cy='latest-video'
                   username={videos?.latest?.username}
@@ -62,7 +62,7 @@ export default function FeedPage() {
         <div className="relative">
           <ScrollArea>
             <div data-cy='make-for-you-videos' className="grid grid-cols-4 gap-8">
-              {videos?.forYou?.videos?.map((album: any) => (
+              {videos?.forYou?.videos?.slice()?.reverse()?.map((album: any) => (
                 <AlbumArtwork
                     data-cy='make-for-you-video'
                   username={videos?.forYou?.username}
