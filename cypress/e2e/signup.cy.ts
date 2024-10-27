@@ -57,11 +57,11 @@ describe("Registration Tests", () => {
   });
 
   /**
-   * @function shouldShowErrorsForExistingUsernameAndEmail
+   * @function shouldShowErrorsForTakenUsername
    * @description Simulates a signup error when the username or email already exists.
    * Mocks the API response to return a 400 error and verifies that the corresponding error messages are displayed.
    */
-  it('should show errors for existing username and email', () => {
+  it('should shows error for taken username', () => {
     // Use the fixture data to fill out the form
     cy.fixture('db/registration').then((registrationData) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -78,6 +78,16 @@ describe("Registration Tests", () => {
       cy.get('button[type="submit"]').click();
       // Assert the error messages
       cy.contains('Username already taken').should('exist');
+  });
+
+  /**
+   * @function shouldShowErrorsForTakenEmail
+   * @description Simulates a signup error when the username or email already exists.
+   * Mocks the API response to return a 400 error and verifies that the corresponding error messages are displayed.
+   */
+  it('should shows error for taken email', () => {
+    // Use the fixture data to fill out the form
+    cy.fixture('db/registration').then((registrationData) => {
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
