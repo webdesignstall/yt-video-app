@@ -42,7 +42,7 @@ export async function POST(req) {
         urls
     };
 
-    const result = await updateData(users,username, 'registration', fs, path);
+    const result = await updateData(users,'registration', fs, path);
 
     if (result.success){
         // Simulate success response

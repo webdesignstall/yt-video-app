@@ -19,6 +19,87 @@ describe('Profile Update Form', () => {
     cy.wait('@getProfileUpdate'); // Wait for the GET request to complete
   });
 
+
+  /**
+   * @function shouldShowValidationErrorsOnEmptyFields
+   * @description Verifies that submitting the form with empty fields triggers validation errors.
+   */
+  it('should show validation error for empty username and bio', () => {
+    // Attempt to submit form with empty username and bio
+    cy.get("[data-cy='username']").clear({ force: true });
+
+    cy.get('[role="combobox"]').click(); // Open the dropdown
+    cy.contains('jonyahmed19@gmail.com').click({ force: true });
+
+    cy.get("[data-cy='bio']").clear(); // Empty bio
+    cy.get('input[name="urls.0.value"]').type('https://example.com'); // Fill URL
+
+    // Submit the form
+    cy.get('button[type="submit"]').click();
+
+    // Assert validation error for username and bio
+    cy.get('[data-cy="error-message"]').should('be.visible');
+  });
+
+  /**
+   * @function shouldShowValidationErrorsOnEmptyFields
+   * @description Verifies that submitting the form with empty fields triggers validation errors.
+   */
+  it('should show validation error for empty bio and URL', () => {
+    // Attempt to submit form with empty bio and URL
+    cy.get("[data-cy='username']").type('testuser'); // Fill username
+
+    cy.get('[role="combobox"]').click(); // Open the dropdown
+    cy.contains('jonyahmed19@gmail.com').click({ force: true });
+
+    cy.get("[data-cy='bio']").clear(); // Empty bio
+    cy.get('input[name="urls.0.value"]').clear({ force: true }); // Empty URL
+
+    // Submit the form
+    cy.get('button[type="submit"]').click();
+
+    // Assert validation error for bio and URL
+    cy.get('[data-cy="error-message"]').should('be.visible');
+  });
+
+  /**
+   * @function shouldShowValidationErrorsOnEmptyFields
+   * @description Verifies that submitting the form with empty fields triggers validation errors.
+   */
+  it('should show validation error for empty username and URL', () => {
+    // Attempt to submit form with empty username and URL
+    cy.get("[data-cy='username']").clear({ force: true });
+
+    cy.get("[data-cy='bio']").type('This is a bio.'); // Fill bio
+    cy.get('input[name="urls.0.value"]').clear({ force: true }); // Empty URL
+
+    // Submit the form
+    cy.get('button[type="submit"]').click();
+
+    // Assert validation error for username and URL
+    cy.get('[data-cy="error-message"]').should('be.visible');
+  });
+  /**
+   * @function shouldShowValidationErrorsOnEmptyFields
+   * @description Verifies that submitting the form with empty fields triggers validation errors.
+   */
+  it('should show validation error for empty bio and URL with username filled', () => {
+    // Attempt to submit form with only username filled
+    cy.get("[data-cy='username']").clear({force: true}).type('testuser'); // Fill username
+
+    cy.get('[role="combobox"]').click(); // Open the dropdown
+    cy.get("[data-cy='bio']").clear({force: true}); // Empty bio
+    cy.get('input[name="urls.0.value"]').clear({ force: true }); // Empty URL
+
+    // Submit the form
+    cy.get('button[type="submit"]').click();
+
+    // Assert validation error for bio and URL
+    cy.get('[data-cy="error-message"]').should('be.visible');
+  });
+
+
+
   /**
    * @function shouldShowValidationErrorsOnEmptyFields
    * @description Verifies that submitting the form with empty fields triggers validation errors.
@@ -40,6 +121,7 @@ describe('Profile Update Form', () => {
     cy.get('[data-cy="error-message"]').should('be.visible');
   });
 
+
   /**
    * @function shouldSubmitFormWithValidData
    * @description Test to submit the form with valid data and check for a success message.
@@ -47,8 +129,13 @@ describe('Profile Update Form', () => {
   it('should send a POST request and handle the response correctly', () => {
     cy.fixture('db/registration').then((data) => {
       // Fill in the form fields
+   /*   cy.get('[role="combobox"]').click(); // Open dropdown
+      cy.contains(data[0].email).click({ force: true }); // Select email*/
+
       cy.get('[role="combobox"]').click(); // Open dropdown
-      cy.contains(data[0].email).click({ force: true }); // Select email
+      // cy.contains(data[0].email).debug().click({ force: true });
+      cy.get('select').select(data[0].email, {force: true}); // This will select the email
+
 
       cy.get("[data-cy='bio']").clear().type('Update'.repeat(10)); // Fill in the bio field
 
@@ -76,11 +163,11 @@ describe('Profile Update Form', () => {
       cy.get("[data-cy='id']").invoke('val', data[0].id);
 
       // Fill in other form fields
-      cy.get("[data-cy='username']").clear().type('changeusername');
+      cy.get("[data-cy='username']").clear({force:true}).type('changeusername');
 
       // Open the dropdown and select email
       cy.get('[role="combobox"]').click({ force: true });
-      cy.contains(data[0].email).click({ force: true });
+      cy.get('select').select(data[0].email, {force: true}); // This will select the email
 
       // Fill in the bio field
       cy.get("[data-cy='bio']").type('Update'.repeat(10));
@@ -106,4 +193,5 @@ describe('Profile Update Form', () => {
     cy.get('button[type="submit"]').click();
     cy.get('[data-cy="error-message"]').should('be.visible');
   });
+
 });
