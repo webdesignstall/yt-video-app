@@ -1117,6 +1117,34 @@
               "avatar": "/avatars/01.png"
             },
             "content": "what’s up what’s up"
+          },
+          {
+            "author": {
+              "name": "@jony.ahmed",
+              "avatar": "../../../cypress/fixtures/images/slide2.png"
+            },
+            "content": "Great video! Thanks for sharing."
+          },
+          {
+            "author": {
+              "name": "@jony.ahmed",
+              "avatar": "../../../cypress/fixtures/images/slide2.png"
+            },
+            "content": "First comment"
+          },
+          {
+            "author": {
+              "name": "@jony.ahmed",
+              "avatar": "../../../cypress/fixtures/images/slide2.png"
+            },
+            "content": "Second comment"
+          },
+          {
+            "author": {
+              "name": "@jony.ahmed",
+              "avatar": "../../../cypress/fixtures/images/slide2.png"
+            },
+            "content": "Third comment"
           }
         ]
       },
