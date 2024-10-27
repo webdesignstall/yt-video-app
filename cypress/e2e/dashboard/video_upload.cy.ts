@@ -76,6 +76,53 @@ describe('Video Upload Functionality', () => {
         });
     });
 
+
+    /**
+     * @function verifiesVideoDataInTable
+     * @description Checks that the uploaded video data is displayed correctly in the table.
+     * - Uploads a sample video.
+     * - Verifies that the expected video details are displayed in the table after the upload.
+     */
+    it('verifies video data in table is correct', () => {
+
+        cy.fixture('db/video-upload').then((videos) => {
+            // Intercept the video upload API to simulate success
+            cy.intercept('POST', '/api/video-upload', {
+                statusCode: 200,
+                body: { message: 'Video uploaded successfully!' },
+            }).as('videoUpload');
+
+            const lastVideo = videos[videos.length - 1];
+
+            cy.fixture(lastVideo?.filename, 'base64').then(fileContent => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                cy.get('input[type="file"]').attachFile({
+                    fileContent: Cypress.Buffer.from(fileContent, 'base64'),
+                    fileName: lastVideo?.filename,
+                    mimeType: 'video/mp4'
+                });
+            });
+
+            // Wait for the video upload API call to complete
+            cy.wait('@videoUpload').its('response.statusCode').should('eq', 200);
+            cy.get("[data-cy='api-res-msg']").contains('Video uploaded successfully!').should('be.visible');
+
+            // Verify that the video appears in the table with correct data
+            cy.get('table').within(() => {
+                cy.get('tr').last() // Assuming the last row is the newly uploaded video
+                    .within(() => {
+                        // Check for video name
+                        cy.get('td').contains(lastVideo?.id).should('be.visible');
+                        cy.get('td').contains(lastVideo?.filename).should('be.visible');
+                        cy.get('td').contains(lastVideo?.duration).should('be.visible');
+                    });
+            });
+        })
+
+
+    });
+
     /**
      * @function handlesVideoUploadError
      * @description Simulates an error during video upload and verifies that the correct error message is displayed.
