@@ -42,6 +42,33 @@ describe('Video Upload Functionality', () => {
         cy.get('div').contains('Drop the video files here ...').should('not.exist');
     });
 
+
+    /**
+     * @function handlesUnsupportedVideoFormat
+     * @description Tests the error handling when an unsupported video format is uploaded.
+     * - Tries to upload an unsupported video format.
+     * - Verifies that the correct error message is displayed.
+     */
+    it('handles unsupported video format upload', () => {
+        const unsupportedVideoFile = 'images/image.jpg'; // Replace with your unsupported video format
+
+        // Assuming you have a fixture for the unsupported video format
+        cy.fixture(unsupportedVideoFile, 'base64').then(fileContent => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            cy.get('input[type="file"]').attachFile({
+                fileContent: Cypress.Buffer.from(fileContent, 'base64'),
+                fileName: unsupportedVideoFile,
+                mimeType: 'image/jpg' // Set the mime type to the unsupported type
+            });
+        });
+
+        // Check for the error message
+        cy.get("[data-cy='upload-error-msg']").should('be.visible')
+            .and('contain', 'Unsupported file format. Please upload a video in .mp4, .avi, .mov, or .wmv format.');
+    });
+
+
     /**
      * @function uploadsVideoAndAddsToTable
      * @description Simulates a video file upload and verifies that the video appears in the table.
@@ -49,7 +76,7 @@ describe('Video Upload Functionality', () => {
      * - Waits for the API call and checks for a success message.
      * - Verifies the video appears in the table after a successful upload.
      */
-    it('uploads video and adds it to the table', () => {
+    it('should uploads video and adds it to the table', () => {
         const videoFile = 'video/Best No Text Intro.mp4';
 
         cy.fixture(videoFile, 'base64').then(fileContent => {
@@ -83,7 +110,7 @@ describe('Video Upload Functionality', () => {
      * - Uploads a sample video.
      * - Verifies that the expected video details are displayed in the table after the upload.
      */
-    it('verifies video data in table is correct', () => {
+    it('should verifies video data in table is correct', () => {
 
         cy.fixture('db/video-upload').then((videos) => {
             // Intercept the video upload API to simulate success
@@ -129,7 +156,7 @@ describe('Video Upload Functionality', () => {
      * - Mocks the API call response to simulate an upload error.
      * - Waits for the API call and checks for an error message.
      */
-    it('handles video upload error', () => {
+    it('should handles video upload error', () => {
         cy.intercept('POST', '/api/video-upload', {
             statusCode: 500,
             body: { error: 'Video upload failed' },
