@@ -24,29 +24,47 @@ describe('Single Video Page Channel Subscribe Test', () => {
 
     /**
      * @function toggleAutoRenewCheckbox
-     * @description Toggles the auto-renew checkbox in the subscribe modal.
+     * @description Toggles the auto-renewal checkbox in the subscribe modal.
      */
-    it('Should switch auto renew checkbox', () => {
+    it('Should switch auto-renew checkbox', () => {
         cy.wait('@getVideo');
         cy.get("[data-cy='subscribe-btn']").click();
         cy.contains('Subscribe Channel').should('be.visible');
 
+        // Verify initial state of the checkbox (assuming it's unchecked initially)
+        cy.get("[role=switch]").should('have.attr', 'aria-checked', 'false');
+
+        // Toggle the checkbox to enable auto-renew
         cy.get("[role=switch]").click();
+        cy.get("[role=switch]").should('have.attr', 'aria-checked', 'true');
+
+        // Toggle the checkbox again to disable auto-renew
         cy.get("[role=switch]").click();
+        cy.get("[role=switch]").should('have.attr', 'aria-checked', 'false');
     });
+
 
     /**
-     * @function closeModalByClickingOutside
-     * @description Closes the modal by simulating a click outside of it and verifies that the modal is closed.
+     * @function closeSubscribeModalByClickingOutside
+     * @description Closes the subscribe modal by simulating a click outside of it and verifies that the modal is closed.
      */
-    it('should close the modal when clicking outside of it', () => {
+    it('should close the subscribe modal when clicking outside of it', () => {
+        // Wait for the video data to load before interacting with the modal
         cy.wait('@getVideo');
+
+        // Open the subscribe modal by clicking the subscribe button
         cy.get("[data-cy='subscribe-btn']").click();
 
+        // Verify that the subscribe modal is visible
         cy.contains('Subscribe Channel').should('be.visible');
+
+        // Simulate a click outside the modal to close it (clicking in the top-left corner of the body)
         cy.get('body').click(0, 0, { force: true });
+
+        // Verify that the subscribe modal is no longer visible after clicking outside
         cy.contains('Subscribe Channel').should('not.exist');
     });
+
 
     /**
      * @function submitSubscriptionForm
