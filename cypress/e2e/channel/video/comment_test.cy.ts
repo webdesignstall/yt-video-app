@@ -24,18 +24,16 @@ describe('Video Comment Tests', () => {
     it('Should submit a comment and verify its appearance in the comments section', () => {
         cy.wait('@getVideo');
 
-        const content = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,\n' +
-            'molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum\n' +
-            'numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium\n' +
-            'optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis';
+        const content = 'Great video! Thanks for sharing.';
 
         cy.get("[data-cy='comment-input']").clear().type(content);
         cy.get("[data-cy='comment-form']").submit();
 
         // Wait for the comment to be submitted and page to update
         cy.wait('@getVideo');
-        cy.get("[data-cy='content']").last().contains('Lorem ipsum dolor sit amet consectetur adipisicing elit.');
+        cy.get("[data-cy='content']").last().contains('Great video! Thanks for sharing.');
     });
+
 
     /**
      * @function verifyCommentsSection
