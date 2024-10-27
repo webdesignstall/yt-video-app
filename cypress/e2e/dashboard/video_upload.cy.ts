@@ -149,4 +149,6 @@ describe('Video Upload Functionality', () => {
         cy.wait('@videoUploadError').its('response.statusCode').should('eq', 500);
         cy.get("[data-cy='api-res-msg']").contains('Video upload failed').should('be.visible');
     });
+
+
 });
