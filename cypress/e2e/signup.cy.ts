@@ -78,6 +78,7 @@ describe("Registration Tests", () => {
       cy.get('button[type="submit"]').click();
       // Assert the error messages
       cy.contains('Username already taken').should('exist');
+    })
   });
 
   /**
@@ -151,4 +152,5 @@ describe("Registration Tests", () => {
     // Verify that the login page is displayed
     cy.url().should("include", "/login");
   });
+
 });
