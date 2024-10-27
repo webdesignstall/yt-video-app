@@ -21,6 +21,50 @@ describe('Explore Page E2E Tests', () => {
         cy.get("[data-cy='subscribed']").should('be.visible');
     });
 
+
+    it('should display channels in reverse order on the Explore channel tap page', () => {
+        // Load fixture data to use in the test assertions
+        cy.fixture('db/channel').then((channels) => {
+            const reversedChannels = [...channels].reverse(); // Create reversed order of channels
+
+            // Wait for the intercept alias to load data on the Explore page
+            cy.wait('@exploreChannel');
+
+            // Click the Explore tab to display channels
+            cy.get("[data-cy='explore']").click();
+
+            // Loop through each reversed channel and assert that it's displayed in the correct order
+            reversedChannels.forEach((channel, index) => {
+                cy.get("[data-cy='channel-card']").eq(index).within(() => {
+                    // Assert the channel name or unique property to verify correct order
+                    cy.contains(channel.username).should('exist');
+                });
+            });
+        });
+    });
+
+    it('should display channels in reverse order on the Subscribed channel tap page', () => {
+        // Load fixture data to use in the test assertions
+        cy.fixture('db/subscribed_channel').then((channels) => {
+            const reversedChannels = [...channels].reverse(); // Create reversed order of channels
+
+            // Wait for the intercept alias to load data on the Explore page
+            cy.wait('@subscribedChannel');
+
+            // Click the Explore tab to display channels
+            cy.get("[data-cy='subscribed']").click();
+
+            // Loop through each reversed channel and assert that it's displayed in the correct order
+            reversedChannels.forEach((channel, index) => {
+                cy.get("[data-cy='channel-card']").eq(index).within(() => {
+                    // Assert the channel name or unique property to verify correct order
+                    cy.contains(channel.username).should('exist');
+                });
+            });
+        });
+    });
+
+
     /**
      * Test to verify that the Explore tab displays channel data.
      * @function shouldDisplayChannelsInExploreTab
@@ -124,4 +168,5 @@ describe('Explore Page E2E Tests', () => {
             cy.get('button').should('contain', 'Subscribe');
         });
     });
+
 });

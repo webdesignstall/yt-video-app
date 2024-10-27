@@ -5,5 +5,12 @@
     "number_of_month": "1",
     "autoRenew": true,
     "subscribe_for": 672
+  },
+  {
+    "username": "wefozy",
+    "channelId": 1,
+    "number_of_month": "1",
+    "autoRenew": true,
+    "subscribe_for": 0
   }
 ]

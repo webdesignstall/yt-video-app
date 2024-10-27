@@ -1,5 +1,5 @@
 "use client";
-import {useEffect, useState} from "react";
+import { useState} from "react";
 import { Separator } from "@/components/ui/separator";
 import { VideosTable } from "@/app/dashboard/videos/videos-table";
 import { useDropzone } from "react-dropzone";
@@ -7,36 +7,51 @@ import { Task } from "./data/schema";
 import { UploadIcon } from "@radix-ui/react-icons";
 
 function VideoUploader({ onUpload }: { onUpload: (_files: File[]) => void }) {
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
-      "video/*": [".mp4", ".avi", ".mov", ".wmv"],
+      "video/mp4": [".mp4"],
+      "video/avi": [".avi"],
+      "video/quicktime": [".mov"],
+      "video/x-ms-wmv": [".wmv"],
     },
-    onDrop: (acceptedFiles) => {
-      onUpload(acceptedFiles);
+    onDrop: (acceptedFiles, rejectedFiles) => {
+      console.log("acceptedFiles", acceptedFiles, rejectedFiles);
+      if (rejectedFiles.length > 0) {
+        setErrorMsg("Unsupported file format. Please upload a video in .mp4, .avi, .mov, or .wmv format.");
+      } else {
+        setErrorMsg(null); // Clear any previous error
+        onUpload(acceptedFiles);
+      }
     },
     multiple: false,
   });
 
   return (
-      <div
-          {...getRootProps()}
-          className={`p-6 mt-4 mb-6 border-2 border-dashed rounded-lg text-center cursor-pointer ${
-              isDragActive ? "border-blue-500 bg-blue-50" : "border-gray-300"
-          }`}
-          data-cy="upload-wrap"
-      >
-        <input data-cy="video-input" {...getInputProps()} />
-        {isDragActive ? (
-            <div className="space-y-4">
-              <UploadIcon className="w-12 h-12 mx-auto text-blue-500" />
-              <p>Drop the video files here ...</p>
-            </div>
-        ) : (
-            <div className="space-y-4">
-              <UploadIcon className="w-12 h-12 mx-auto text-blue-500" />
-              <p>Drag n drop some video files here, or click to select files</p>
-            </div>
-        )}
+      <div>
+        {errorMsg && <p data-cy="upload-error-msg" className="text-red-500">{errorMsg}</p>}
+
+          <div
+              {...getRootProps()}
+              className={`p-6 mt-4 mb-6 border-2 border-dashed rounded-lg text-center cursor-pointer ${
+                  isDragActive ? "border-blue-500 bg-blue-50" : "border-gray-300"
+              }`}
+              data-cy="upload-wrap"
+          >
+            <input data-cy="video-input" {...getInputProps()} />
+            {isDragActive ? (
+                <div className="space-y-4">
+                  <UploadIcon className="w-12 h-12 mx-auto text-blue-500" />
+                  <p>Drop the video files here ...</p>
+                </div>
+            ) : (
+                <div className="space-y-4">
+                  <UploadIcon className="w-12 h-12 mx-auto text-blue-500" />
+                  <p>Drag and drop a video file here, or click to select a file</p>
+                </div>
+            )}
+          </div>
       </div>
   );
 }

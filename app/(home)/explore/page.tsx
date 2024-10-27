@@ -55,7 +55,7 @@ export default function ExplorePage() {
           </div>
           <TabsContent value="explore" className="border-none p-0 outline-none">
             <div className="space-y-4">
-              {exploreChannel?.map((channel:any) => (
+              {exploreChannel?.slice()?.reverse()?.map((channel:any) => (
                 <ChannelCard
                   data-cy='channel-card'
                   key={channel?.username}
@@ -70,7 +70,7 @@ export default function ExplorePage() {
             className="h-full flex-col border-none p-0 data-[state=active]:flex"
           >
             <div className="space-y-4">
-              {subscribedChannel.map((channel: any) => (
+              {subscribedChannel?.slice()?.reverse()?.map((channel: any) => (
                 <ChannelCard
                   data-cy='channel-card'
                   key={channel.id}
