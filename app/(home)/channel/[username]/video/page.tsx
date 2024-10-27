@@ -303,8 +303,8 @@ export default function BrowsePage() {
                 <Separator/>
                 <div data-cy='comments-section'>
                   {
-                    video?.comments?.map((comment: any, index: any) => (
-                        <div key={index} className="flex items-start gap-4">
+                    [...(video?.comments || [])].reverse()?.map((comment: any, index: any) => (
+                        <div key={index} className="flex items-start gap-4 my-4">
                           <Avatar className="hidden h-9 w-9 sm:flex">
                             <AvatarImage src={comment?.author?.avatar} alt="Avatar"/>
                             <AvatarFallback>OM</AvatarFallback>
