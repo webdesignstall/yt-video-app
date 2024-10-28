@@ -9,6 +9,7 @@
     "lint": "next lint",
     "seed:tasks": "tsx --tsconfig ./tsconfig.scripts.json ./app/dashboard/subscriptions/data/seed.ts",
     "cypress:open": "cypress open",
+    "cypress:run": "npx cypress open",
     "jsdoc:make": "npx jsdoc -c .jsdoc.json"
   },
   "dependencies": {
