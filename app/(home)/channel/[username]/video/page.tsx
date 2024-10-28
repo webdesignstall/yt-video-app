@@ -144,6 +144,7 @@ export default function BrowsePage() {
           <div className="border-none p-0 outline-none space-y-3">
             <div className="bg-background">
               <iframe
+                data-cy='video-iframe'
                 width="100%"
                 height="100%"
                 src={video?.src}
