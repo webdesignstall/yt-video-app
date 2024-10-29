@@ -12,7 +12,9 @@ describe('Video Upload Functionality', () => {
      * This ensures that each test starts from the correct page.
      */
     beforeEach(() => {
+        cy.intercept('GET','/api/video-upload').as('getUploadedVideo');
         cy.visit('/dashboard/videos');
+        cy.wait('@getUploadedVideo');
     });
 
     /**
@@ -121,7 +123,7 @@ describe('Video Upload Functionality', () => {
 
             const lastVideo = videos[videos.length - 1];
 
-            cy.fixture(lastVideo?.filename, 'base64').then(fileContent => {
+            cy.fixture('video/'+lastVideo?.filename, 'base64').then(fileContent => {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 cy.get('input[type="file"]').attachFile({
@@ -135,9 +137,10 @@ describe('Video Upload Functionality', () => {
             cy.wait('@videoUpload').its('response.statusCode').should('eq', 200);
             cy.get("[data-cy='api-res-msg']").contains('Video uploaded successfully!').should('be.visible');
 
+
             // Verify that the video appears in the table with correct data
             cy.get('table').within(() => {
-                cy.get('tr').last() // Assuming the last row is the newly uploaded video
+                cy.get('tr').eq(1) // Assuming the last row is the newly uploaded video
                     .within(() => {
                         // Check for video name
                         cy.get('td').contains(lastVideo?.id).should('be.visible');

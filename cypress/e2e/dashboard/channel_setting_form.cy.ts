@@ -94,7 +94,8 @@ describe('Channel Settings Form', () => {
      * @description Validates the price per month field for minimum value.
      */
     it("should display error if price per month is below the minimum", () => {
-        cy.get('input[name="price_per_month"]').clear().type('2').blur()
+        cy.get('input[name="price_per_month"]').clear({force: true});
+        cy.get('input[name="price_per_month"]').type('2').blur()
         // cy.get('form').submit();
         cy.get('[data-cy="error-message"]').should('be.visible').contains('Number must be greater than or equal to 5').should('exist');
     });
