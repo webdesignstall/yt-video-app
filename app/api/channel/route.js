@@ -63,7 +63,7 @@ export async function PUT(req) {
 
     // console.log(channels)
 
-    const result = await updateData(channels,username, 'channel', fs, path);
+    const result = await updateData(channels, 'channel', fs, path);
 
     if (result.success){
         // Simulate success response

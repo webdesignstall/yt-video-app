@@ -74,5 +74,10 @@ export async function PUT(req) {
 export async function GET() {
     const data = await getData('video-upload', fs, path)
 
-    return NextResponse.json({ data }, { status: 200 });
+// Sort data by created date in descending order
+    const sortedData = data
+        .filter(item => item.created) // Ensure 'created' exists
+        .sort((a, b) => new Date(b.created) - new Date(a.created));
+
+    return NextResponse.json({ data: sortedData }, { status: 200 });
 }

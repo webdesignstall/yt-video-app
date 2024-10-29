@@ -83,6 +83,7 @@ describe("Sign In Form", () => {
     // Assert the successful login message
     cy.contains('Login Successfully!').should('exist');
 
+    cy.wait(500)
     // Assert that the user is redirected to the dashboard page
     cy.url().should("include", "/dashboard");
 
